@@ -39,5 +39,6 @@ pub struct Civ {
         }
     }
     ))]
+    #[bw(args (version,))]
     units: Vec<Option<Unit>>,
 }

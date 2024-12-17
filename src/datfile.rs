@@ -24,7 +24,7 @@ struct DatFile {
             .map_err(|err|std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?
             .try_into()
     })]
-    #[bw(map = |x: &Version| x.to_string().bytes().take(8))]
+    #[bw(map = |x: &Version| x.to_string().bytes().take(8).collect::<Vec<u8>>())]
     version: Version,
 
     #[br(temp)]
@@ -40,6 +40,7 @@ struct DatFile {
           .map(|restriction: &TerrainRestriction| restriction.passable_buildable_dmg_multiplier.len())
           .unwrap_or(0)
     })]
+    #[bw(try_map = |x: usize| x.try_into())]
     terrains_used_1: usize,
 
     #[br(count = terrain_restrictions_size)]
@@ -106,7 +107,7 @@ struct DatFile {
         count = civs_size,
         args { inner: (version,)  }
     )]
-    #[bw(args { inner: (version,) })]
+    #[bw(args (version,))]
     civs: Vec<Civ>,
 
     #[br(temp)]
