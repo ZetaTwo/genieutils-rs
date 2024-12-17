@@ -10,7 +10,7 @@ struct ResearchResourceCost {
 }
 
 #[binrw]
-struct Tech {
+pub struct Tech {
     required_techs: (i16, i16, i16, i16, i16, i16),
     resource_costs: (
         ResearchResourceCost,

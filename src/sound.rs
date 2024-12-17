@@ -12,7 +12,7 @@ struct SoundItem {
 }
 
 #[binrw]
-struct Sound {
+pub struct Sound {
     id: i16,
     play_delay: i16,
     #[br(temp)]

@@ -1,7 +1,7 @@
 use binrw::binrw;
 
 #[binrw]
-struct Task {
+pub struct Task {
     task_type: i16,
     id: i16,
     is_default: u8,

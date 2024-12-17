@@ -27,7 +27,7 @@ struct GraphicAngleSound {
 }
 
 #[binrw]
-struct Graphic {
+pub struct Graphic {
     name: DebugString,
     file_name: DebugString,
     particle_effect_name: DebugString,

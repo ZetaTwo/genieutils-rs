@@ -12,7 +12,7 @@ struct EffectCommand {
 }
 
 #[binrw]
-struct Effect {
+pub struct Effect {
     name: DebugString,
 
     #[br(temp)]

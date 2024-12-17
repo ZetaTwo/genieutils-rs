@@ -1,7 +1,7 @@
 use binrw::binrw;
 
 #[binrw]
-struct PlayerColour {
+pub struct PlayerColour {
     id: i32,
     player_color_base: i32,
     unit_outline_color: i32,

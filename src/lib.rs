@@ -1,3 +1,4 @@
+mod civ;
 mod common;
 mod datfile;
 mod effect;
@@ -7,6 +8,12 @@ mod randommaps;
 mod sound;
 mod task;
 mod tech;
+mod techtree;
+mod terrainblock;
+mod terrainrestrictions;
+mod unit;
+mod unitheaders;
+mod versions;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right

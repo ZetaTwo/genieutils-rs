@@ -1,5 +1,9 @@
 use binrw::binrw;
 
+pub const TILE_TYPE_COUNT: usize = 19;
+pub const TERRAIN_COUNT: usize = 200;
+pub const TERRAIN_UNITS_SIZE: usize = 30;
+
 #[binrw]
 #[br(assert(temp_size == 0x0A60, "DebugString temp_size invalid: {}", temp_size))]
 pub struct DebugString {

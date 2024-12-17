@@ -108,7 +108,7 @@ struct MapInfo {
 
 #[binrw]
 #[bw(assert(map_info_1.len() == map_info_2.len(), "map_info lists lengths unmatched: {} != {}", map_info_1.len(), map_info_2.len()))]
-struct RandomMaps {
+pub struct RandomMaps {
     #[br(temp)]
     #[bw(try_calc = map_info_1.len().try_into())]
     random_map_count: u32,
