@@ -24,15 +24,24 @@ struct DatFile {
     #[bw(try_calc = float_ptr_terrain_tables.len().try_into())]
     terrain_restrictions_size: i16,
 
-    terrains_used_1: i16, // TODO: check this
-
+    #[br(try_map = |x: i16| x.try_into())]
+    #[bw(try_map = |x: &usize| TryInto::<i16>::try_into(*x))]
+    terrains_used_1: usize, // TODO: recalc on write
+    /*
+    terrains_used = 0
+        if self.terrain_restrictions:
+            terrains_used = len(self.terrain_restrictions[0].passable_buildable_dmg_multiplier)
+    */
     #[br(count = terrain_restrictions_size)]
     float_ptr_terrain_tables: Vec<u32>,
 
     #[br(count = terrain_restrictions_size)]
     terrain_pass_graphic_pointers: Vec<u32>,
 
-    #[br(count = terrain_restrictions_size)]
+    #[br(
+        count = terrain_restrictions_size,
+        args { inner: (terrains_used_1,)  }
+    )]
     terrain_restrictions: Vec<TerrainRestriction>,
 
     #[br(temp)]
@@ -51,8 +60,9 @@ struct DatFile {
     #[bw(try_calc = graphics.len().try_into())]
     graphics_size: i16,
 
-    // #[br(count = graphics_size)]
-    // TODO: graphic_pointers
+    #[br(count = graphics_size)]
+    graphic_pointers: Vec<i32>,
+    // TODO: use graphic_pointers in parsing
     #[br(count = graphics_size)]
     graphics: Vec<Option<Graphic>>,
 
