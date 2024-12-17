@@ -1,3 +1,5 @@
+use std::fmt::Error;
+
 use binrw::binrw;
 
 use crate::civ::Civ;
@@ -11,14 +13,19 @@ use crate::techtree::TechTree;
 use crate::terrainblock::TerrainBlock;
 use crate::terrainrestrictions::TerrainRestriction;
 use crate::unitheaders::UnitHeaders;
+use crate::versions::Version;
 
 #[binrw]
 #[bw(assert(float_ptr_terrain_tables.len() == terrain_pass_graphic_pointers.len() && terrain_pass_graphic_pointers.len() == terrain_restrictions.len(), "terrain_tables lists lengths unmatched: {} != {} != {}", float_ptr_terrain_tables.len(), terrain_pass_graphic_pointers.len(), terrain_restrictions.len()))]
 struct DatFile {
     #[br(count = 8)]
-    #[br(try_map = |x: Vec<u8>| String::from_utf8(x))]
-    #[bw(map = |x: &String| x.as_bytes())]
-    version: String,
+    #[br(try_map = |x: Vec<u8>| {
+        String::from_utf8(x)
+            .map_err(|err|std::io:Error::new(std::io::ErrorKind::InvalidInput, err))?
+            .try_into()
+    })]
+    #[bw(map = |x: &Version| x.to_string().bytes().take(8))]
+    version: Version,
 
     #[br(temp)]
     #[bw(try_calc = float_ptr_terrain_tables.len().try_into())]
@@ -84,7 +91,12 @@ struct DatFile {
     #[br(temp)]
     #[bw(try_calc = civs.len().try_into())]
     civs_size: i16,
-    #[br(count = civs_size)]
+    #[br(
+        count = civs_size,
+        args { inner: (version,)  }
+    )]
+    #[bw(
+        args { inner: (version,) })]
     civs: Vec<Civ>,
 
     #[br(temp)]
