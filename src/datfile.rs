@@ -1,6 +1,6 @@
-use std::fmt::Error;
-
 use binrw::binrw;
+use binrw::helpers::args_iter_with;
+use binrw::BinRead;
 
 use crate::civ::Civ;
 use crate::effect::Effect;
@@ -21,7 +21,7 @@ struct DatFile {
     #[br(count = 8)]
     #[br(try_map = |x: Vec<u8>| {
         String::from_utf8(x)
-            .map_err(|err|std::io:Error::new(std::io::ErrorKind::InvalidInput, err))?
+            .map_err(|err|std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?
             .try_into()
     })]
     #[bw(map = |x: &Version| x.to_string().bytes().take(8))]
@@ -31,14 +31,17 @@ struct DatFile {
     #[bw(try_calc = float_ptr_terrain_tables.len().try_into())]
     terrain_restrictions_size: i16,
 
+    #[br(temp)]
     #[br(try_map = |x: i16| x.try_into())]
-    #[bw(try_map = |x: &usize| TryInto::<i16>::try_into(*x))]
-    terrains_used_1: usize, // TODO: recalc on write
-    /*
-    terrains_used = 0
-        if self.terrain_restrictions:
-            terrains_used = len(self.terrain_restrictions[0].passable_buildable_dmg_multiplier)
-    */
+    // TODO: is this truly correct?
+    #[bw(calc = {
+        terrain_restrictions
+          .get(0)
+          .map(|restriction: &TerrainRestriction| restriction.passable_buildable_dmg_multiplier.len())
+          .unwrap_or(0)
+    })]
+    terrains_used_1: usize,
+
     #[br(count = terrain_restrictions_size)]
     float_ptr_terrain_tables: Vec<u32>,
 
@@ -69,8 +72,15 @@ struct DatFile {
 
     #[br(count = graphics_size)]
     graphic_pointers: Vec<i32>,
-    // TODO: use graphic_pointers in parsing
-    #[br(count = graphics_size)]
+    #[br(parse_with = args_iter_with(&graphic_pointers,
+    |reader, endian, &pointer| {
+        if pointer == 0 {
+            Ok(None)
+        } else {
+            <Graphic as BinRead>::read_options(reader, endian, ()).map(|x|Some(x))
+        }
+    }
+    ))]
     graphics: Vec<Option<Graphic>>,
 
     terrain_block: TerrainBlock,
@@ -91,12 +101,12 @@ struct DatFile {
     #[br(temp)]
     #[bw(try_calc = civs.len().try_into())]
     civs_size: i16,
+
     #[br(
         count = civs_size,
         args { inner: (version,)  }
     )]
-    #[bw(
-        args { inner: (version,) })]
+    #[bw(args { inner: (version,) })]
     civs: Vec<Civ>,
 
     #[br(temp)]

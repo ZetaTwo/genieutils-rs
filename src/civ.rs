@@ -1,4 +1,6 @@
 use binrw::binrw;
+use binrw::helpers::args_iter_with;
+use binrw::BinRead;
 
 use crate::common::DebugString;
 use crate::unit::Unit;
@@ -25,10 +27,17 @@ pub struct Civ {
     #[bw(try_calc = units.len().try_into())]
     units_size: i16,
 
-    // TODO: unit_pointers
-    #[br(
-        count = units_size,
-        args { inner: (version,)  }
-    )]
+    #[br(count = units_size)]
+    unit_pointers: Vec<i32>,
+
+    #[br(parse_with = args_iter_with(&unit_pointers,
+    |reader, endian, &pointer| {
+        if pointer == 0 {
+            Ok(None)
+        } else {
+            <Unit as BinRead>::read_options(reader, endian, (version,)).map(|x|Some(x))
+        }
+    }
+    ))]
     units: Vec<Option<Unit>>,
 }

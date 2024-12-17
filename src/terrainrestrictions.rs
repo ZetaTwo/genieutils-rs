@@ -14,7 +14,7 @@ struct TerrainPassGraphic {
 
 pub struct TerrainRestriction {
     #[br(count = terrain_count)]
-    passable_buildable_dmg_multiplier: Vec<f32>,
+    pub passable_buildable_dmg_multiplier: Vec<f32>,
     #[br(count = terrain_count)]
-    terrain_pass_graphics: Vec<TerrainPassGraphic>,
+    pub terrain_pass_graphics: Vec<TerrainPassGraphic>,
 }
