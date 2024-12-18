@@ -3,7 +3,10 @@ use binrw::helpers::args_iter_with;
 use binrw::BinRead;
 
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
 
 use crate::common::DebugString;
 use crate::unit::Unit;
@@ -13,6 +16,11 @@ use crate::versions::Version;
 #[br(import(version: Version))]
 #[bw(import(version: Version))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 pub struct Civ {
     player_type: u8,
     name: DebugString,

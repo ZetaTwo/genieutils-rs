@@ -1,12 +1,20 @@
 use binrw::binrw;
 
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
 
 use crate::task::Task;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 struct TaskList {
     #[br(temp)]
     #[bw(try_calc = task_list.len().try_into())]
@@ -18,6 +26,11 @@ struct TaskList {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 pub struct UnitHeaders {
     exists: u8,
 

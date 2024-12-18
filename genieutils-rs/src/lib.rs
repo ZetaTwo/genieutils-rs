@@ -1,19 +1,19 @@
-mod civ;
-mod common;
+pub mod civ;
+pub mod common;
 pub mod datfile;
-mod effect;
-mod graphic;
-mod playercolour;
-mod randommaps;
-mod sound;
-mod task;
-mod tech;
-mod techtree;
-mod terrainblock;
-mod terrainrestrictions;
-mod unit;
-mod unitheaders;
-mod versions;
+pub mod effect;
+pub mod graphic;
+pub mod playercolour;
+pub mod randommaps;
+pub mod sound;
+pub mod task;
+pub mod tech;
+pub mod techtree;
+pub mod terrainblock;
+pub mod terrainrestrictions;
+pub mod unit;
+pub mod unitheaders;
+pub mod versions;
 
 #[cfg(test)]
 mod tests {

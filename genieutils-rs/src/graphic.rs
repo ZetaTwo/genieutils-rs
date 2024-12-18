@@ -3,10 +3,18 @@ use binrw::binrw;
 use crate::common::DebugString;
 
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 struct GraphicDelta {
     graphic_id: i16,
     padding_1: i16,
@@ -19,6 +27,11 @@ struct GraphicDelta {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 struct GraphicAngleSound {
     frame_num: i16,
     sound_id: i16,
@@ -34,6 +47,11 @@ struct GraphicAngleSound {
 #[binrw]
 #[brw(little)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 pub struct Graphic {
     name: DebugString,
     file_name: DebugString,

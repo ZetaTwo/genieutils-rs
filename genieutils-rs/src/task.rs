@@ -1,10 +1,18 @@
 use binrw::binrw;
 
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 pub struct Task {
     task_type: i16,
     id: i16,

@@ -10,7 +10,10 @@ use std::io::prelude::*;
 use std::io::Cursor;
 
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
 
 use crate::civ::Civ;
 use crate::effect::Effect;
@@ -28,6 +31,11 @@ use crate::versions::Version;
 #[binrw]
 #[brw(little)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 #[bw(assert(float_ptr_terrain_tables.len() == terrain_pass_graphic_pointers.len() && terrain_pass_graphic_pointers.len() == terrain_restrictions.len(), "terrain_tables lists lengths unmatched: {} != {} != {}", float_ptr_terrain_tables.len(), terrain_pass_graphic_pointers.len(), terrain_restrictions.len()))]
 pub struct DatFile {
     pub version: Version,
@@ -164,5 +172,60 @@ impl DatFile {
         let inflated = inflater.finish()?;
 
         Ok(inflated)
+    }
+}
+
+#[cfg(feature = "pyo3")]
+mod python {
+    use super::DatFile;
+    use pyo3::exceptions::PyValueError;
+    use pyo3::prelude::*;
+    #[pymethods]
+    impl DatFile {
+        #[staticmethod]
+        #[pyo3(name="parse_compressed")]
+        fn py_parse_compressed(data: &[u8]) -> PyResult<Self> {
+            let datfile = DatFile::parse_compressed(data)
+                .map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(datfile)
+        }
+
+        #[staticmethod]
+        #[pyo3(name="parse")]
+        fn py_parse(data: Vec<u8>) -> PyResult<Self> {
+            let datfile =
+                DatFile::parse(&data).map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(datfile)
+        }
+
+        #[staticmethod]
+        #[pyo3(name="decompress")]
+        fn py_decompress(data: &[u8]) -> PyResult<Vec<u8>> {
+            let data =
+                DatFile::decompress(data).map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(data)
+        }
+
+        #[pyo3(name="serialize")]
+        fn py_serialize(&self) -> PyResult<Vec<u8>> {
+            let data = self
+                .serialize()
+                .map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(data)
+        }
+
+        #[pyo3(name="pack")]
+        fn py_pack(&self) -> PyResult<Vec<u8>> {
+            let data = self
+                .pack()
+                .map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(data)
+        }
+
+        #[getter]
+        #[pyo3(name="version")]
+        fn py_version(&self) -> PyResult<u8> {
+            Ok(self.version as u8)
+        }
     }
 }

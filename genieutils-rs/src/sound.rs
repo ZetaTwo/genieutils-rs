@@ -3,10 +3,18 @@ use binrw::binrw;
 use crate::common::DebugString;
 
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 struct SoundItem {
     filename: DebugString,
     resource_id: i32,
@@ -17,6 +25,11 @@ struct SoundItem {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 pub struct Sound {
     id: i16,
     play_delay: i16,

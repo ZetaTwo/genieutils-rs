@@ -1,7 +1,10 @@
 use binrw::binrw;
 
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
 
 pub const TILE_TYPE_COUNT: usize = 19;
 pub const TERRAIN_COUNT: usize = 200;
@@ -50,6 +53,11 @@ impl PartialOrd<UnitType> for u8 {
 #[brw(little)]
 #[br(assert(temp_size == 0x0A60, "DebugString temp_size invalid: {}", temp_size))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 pub struct DebugString {
     #[br(temp)]
     #[bw(calc = 0x0A60)]

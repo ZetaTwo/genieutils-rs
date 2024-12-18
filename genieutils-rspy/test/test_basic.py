@@ -7,6 +7,9 @@ with open('test/empires2_x2_p1.dat', 'rb') as fin:
 
 decompressed = genieutils_rspy.DatFile.decompress(compressed)
 datfile = genieutils_rspy.DatFile.parse(decompressed)
+
+print(f'Loom gold cost: {datfile.techs[22].resource_costs[0].amount}')
+
 print(f'Version: {datfile.version}')
 serialized = datfile.serialize()
 

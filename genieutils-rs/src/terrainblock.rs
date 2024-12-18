@@ -1,7 +1,10 @@
 use binrw::binrw;
 
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
 
 use crate::common::DebugString;
 use crate::common::TERRAIN_COUNT;
@@ -10,6 +13,11 @@ use crate::common::TILE_TYPE_COUNT;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 struct FrameData {
     frame_count: i16,
     angle_count: i16,
@@ -18,6 +26,11 @@ struct FrameData {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 struct Terrain {
     enabled: u8,
     random: u8,
@@ -69,6 +82,11 @@ struct Terrain {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 struct TileSize {
     width: i16,
     height: i16,
@@ -77,6 +95,11 @@ struct TileSize {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all)
+)]
+#[derive(Clone)]
 pub struct TerrainBlock {
     virtual_function_ptr: u32,
     map_pointer: u32,

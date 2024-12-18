@@ -1,11 +1,18 @@
 use binrw::{BinRead, BinWrite};
 
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
 
 #[derive(Clone, Copy, PartialEq, PartialOrd, BinRead, BinWrite)]
 #[cfg_attr(test, derive(Debug))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(
+    feature = "pyo3",
+    pyclass(module = "genieutils_rspy", get_all, set_all, eq, eq_int)
+)]
 #[brw(little)]
 pub enum Version {
     #[brw(magic = b"VER 7.1\x00")]
