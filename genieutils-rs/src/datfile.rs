@@ -30,7 +30,7 @@ pub struct DatFile {
 
     #[br(temp)]
     #[bw(try_calc = float_ptr_terrain_tables.len().try_into())]
-    terrain_restrictions_size: i16,
+    pub terrain_restrictions_size: i16,
 
     #[br(temp)]
     #[br(try_map = |x: i16| x.try_into())]
@@ -42,31 +42,31 @@ pub struct DatFile {
           .unwrap_or(0)
     })]
     #[bw(try_map = |x: usize| TryInto::<i16>::try_into(x))]
-    terrains_used_1: usize,
+    pub terrains_used_1: usize,
 
     #[br(count = terrain_restrictions_size)]
-    float_ptr_terrain_tables: Vec<u32>,
+    pub float_ptr_terrain_tables: Vec<u32>,
 
     #[br(count = terrain_restrictions_size)]
-    terrain_pass_graphic_pointers: Vec<u32>,
+    pub terrain_pass_graphic_pointers: Vec<u32>,
 
     #[br(
         count = terrain_restrictions_size,
         args { inner: (terrains_used_1,)  }
     )]
-    terrain_restrictions: Vec<TerrainRestriction>,
+    pub terrain_restrictions: Vec<TerrainRestriction>,
 
     #[br(temp)]
     #[bw(try_calc = player_colours.len().try_into())]
     player_colours_size: i16,
     #[br(count = player_colours_size)]
-    player_colours: Vec<PlayerColour>,
+    pub player_colours: Vec<PlayerColour>,
 
     #[br(temp)]
     #[bw(try_calc = sounds.len().try_into())]
     sounds_size: i16,
     #[br(count = sounds_size)]
-    sounds: Vec<Sound>,
+    pub sounds: Vec<Sound>,
 
     #[br(temp)]
     #[bw(try_calc = graphic_pointers.len().try_into())]
@@ -83,22 +83,22 @@ pub struct DatFile {
         }
     }
     ))]
-    graphics: Vec<Option<Graphic>>,
+    pub graphics: Vec<Option<Graphic>>,
 
-    terrain_block: TerrainBlock,
-    random_maps: RandomMaps,
+    pub terrain_block: TerrainBlock,
+    pub random_maps: RandomMaps,
 
     #[br(temp)]
     #[bw(try_calc = effects.len().try_into())]
     effects_size: i32,
     #[br(count = effects_size)]
-    effects: Vec<Effect>,
+    pub effects: Vec<Effect>,
 
     #[br(temp)]
     #[bw(try_calc = unit_headers.len().try_into())]
     unit_headers_size: i32,
     #[br(count = unit_headers_size)]
-    unit_headers: Vec<UnitHeaders>,
+    pub unit_headers: Vec<UnitHeaders>,
 
     #[br(temp)]
     #[bw(try_calc = civs.len().try_into())]
@@ -109,22 +109,22 @@ pub struct DatFile {
         args { inner: (version,)  }
     )]
     #[bw(args (*version,))]
-    civs: Vec<Civ>,
+    pub civs: Vec<Civ>,
 
     #[br(temp)]
     #[bw(try_calc = techs.len().try_into())]
     techs_size: i16,
     #[br(count = techs_size)]
-    techs: Vec<Tech>,
+    pub techs: Vec<Tech>,
 
-    time_slice: u32,
-    unit_kill_rate: u32,
-    unit_kill_total: u32,
-    unit_hit_point_rate: u32,
-    unit_hit_point_total: u32,
-    razing_kill_rate: u32,
-    razing_kill_total: u32,
-    tech_tree: TechTree,
+    pub time_slice: u32,
+    pub unit_kill_rate: u32,
+    pub unit_kill_total: u32,
+    pub unit_hit_point_rate: u32,
+    pub unit_hit_point_total: u32,
+    pub razing_kill_rate: u32,
+    pub razing_kill_total: u32,
+    pub tech_tree: TechTree,
 }
 
 impl DatFile {

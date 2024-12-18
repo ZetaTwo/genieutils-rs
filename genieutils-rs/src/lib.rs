@@ -1,6 +1,6 @@
 mod civ;
 mod common;
-mod datfile;
+pub mod datfile;
 mod effect;
 mod graphic;
 mod playercolour;

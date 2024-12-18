@@ -1,8 +1,7 @@
-[package]
-name = "genieutils-rs"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+resolver = "3"
 
-[dependencies]
-binrw = "0.14.1"
-flate2 = "1.0.35"
+members = [
+    "genieutils-rs", "genieutils-rs-cli",
+    "genieutils-rspy",
+]

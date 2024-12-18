@@ -1,14 +1,14 @@
 use binrw::binrw;
 
 #[binrw]
-struct Common {
+pub struct Common {
     slots_used: i32,
     unit_research: (i32, i32, i32, i32, i32, i32, i32, i32, i32, i32),
     mode: (i32, i32, i32, i32, i32, i32, i32, i32, i32, i32),
 }
 
 #[binrw]
-struct TechTreeAge {
+pub struct TechTreeAge {
     id: i32,
     status: u8,
 
@@ -39,7 +39,7 @@ struct TechTreeAge {
 }
 
 #[binrw]
-struct BuildingConnection {
+pub struct BuildingConnection {
     id: i32,
     status: u8,
     #[br(temp)]
@@ -68,7 +68,7 @@ struct BuildingConnection {
 }
 
 #[binrw]
-struct UnitConnection {
+pub struct UnitConnection {
     id: i32,
     status: u8,
     upper_building: i32,
@@ -86,7 +86,7 @@ struct UnitConnection {
 }
 
 #[binrw]
-struct ResearchConnection {
+pub struct ResearchConnection {
     id: i32,
     status: u8,
     upper_building: i32,
@@ -128,14 +128,14 @@ pub struct TechTree {
     #[bw(try_calc = research_connections.len().try_into())]
     research_count: u8,
 
-    total_unit_tech_groups: i32,
+    pub total_unit_tech_groups: i32,
 
     #[br(count = age_count)]
-    tech_tree_ages: Vec<TechTreeAge>,
+    pub tech_tree_ages: Vec<TechTreeAge>,
     #[br(count = building_count)]
-    building_connections: Vec<BuildingConnection>,
+    pub building_connections: Vec<BuildingConnection>,
     #[br(count = unit_count)]
-    unit_connections: Vec<UnitConnection>,
+    pub unit_connections: Vec<UnitConnection>,
     #[br(count = research_count)]
-    research_connections: Vec<ResearchConnection>,
+    pub research_connections: Vec<ResearchConnection>,
 }
