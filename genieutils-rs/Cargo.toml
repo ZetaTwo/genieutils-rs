@@ -6,3 +6,7 @@ edition = "2021"
 [dependencies]
 binrw = "0.14.1"
 flate2 = "1.0.35"
+serde = { version = "1.0.216", optional = true, features = ["serde_derive"] }
+
+[features]
+serde = ["dep:serde"]

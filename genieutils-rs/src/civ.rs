@@ -2,6 +2,9 @@ use binrw::binrw;
 use binrw::helpers::args_iter_with;
 use binrw::BinRead;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 use crate::common::DebugString;
 use crate::unit::Unit;
 use crate::versions::Version;
@@ -9,6 +12,7 @@ use crate::versions::Version;
 #[binrw]
 #[br(import(version: Version))]
 #[bw(import(version: Version))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Civ {
     player_type: u8,
     name: DebugString,

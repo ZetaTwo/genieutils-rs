@@ -2,7 +2,11 @@ use binrw::binrw;
 
 use crate::common::DebugString;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct ResearchResourceCost {
     r#type: i16,
     amount: i16,
@@ -10,6 +14,7 @@ struct ResearchResourceCost {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Tech {
     required_techs: (i16, i16, i16, i16, i16, i16),
     resource_costs: (

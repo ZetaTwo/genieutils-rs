@@ -2,7 +2,11 @@ use binrw::binrw;
 
 use crate::common::DebugString;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct GraphicDelta {
     graphic_id: i16,
     padding_1: i16,
@@ -14,6 +18,7 @@ struct GraphicDelta {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct GraphicAngleSound {
     frame_num: i16,
     sound_id: i16,
@@ -28,6 +33,7 @@ struct GraphicAngleSound {
 
 #[binrw]
 #[brw(little)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Graphic {
     name: DebugString,
     file_name: DebugString,

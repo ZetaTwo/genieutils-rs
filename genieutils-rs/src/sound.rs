@@ -2,7 +2,11 @@ use binrw::binrw;
 
 use crate::common::DebugString;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct SoundItem {
     filename: DebugString,
     resource_id: i32,
@@ -12,6 +16,7 @@ struct SoundItem {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Sound {
     id: i16,
     play_delay: i16,

@@ -1,6 +1,10 @@
 use binrw::binrw;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Common {
     slots_used: i32,
     unit_research: (i32, i32, i32, i32, i32, i32, i32, i32, i32, i32),
@@ -8,6 +12,7 @@ pub struct Common {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct TechTreeAge {
     id: i32,
     status: u8,
@@ -39,6 +44,7 @@ pub struct TechTreeAge {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct BuildingConnection {
     id: i32,
     status: u8,
@@ -68,6 +74,7 @@ pub struct BuildingConnection {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct UnitConnection {
     id: i32,
     status: u8,
@@ -86,6 +93,7 @@ pub struct UnitConnection {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ResearchConnection {
     id: i32,
     status: u8,
@@ -114,6 +122,7 @@ pub struct ResearchConnection {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct TechTree {
     #[br(temp)]
     #[bw(try_calc = tech_tree_ages.len().try_into())]

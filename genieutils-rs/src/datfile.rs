@@ -9,6 +9,9 @@ use flate2::Compression;
 use std::io::prelude::*;
 use std::io::Cursor;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 use crate::civ::Civ;
 use crate::effect::Effect;
 use crate::graphic::Graphic;
@@ -24,6 +27,7 @@ use crate::versions::Version;
 
 #[binrw]
 #[brw(little)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[bw(assert(float_ptr_terrain_tables.len() == terrain_pass_graphic_pointers.len() && terrain_pass_graphic_pointers.len() == terrain_restrictions.len(), "terrain_tables lists lengths unmatched: {} != {} != {}", float_ptr_terrain_tables.len(), terrain_pass_graphic_pointers.len(), terrain_restrictions.len()))]
 pub struct DatFile {
     pub version: Version,

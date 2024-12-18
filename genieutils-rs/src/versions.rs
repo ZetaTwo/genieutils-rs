@@ -1,7 +1,11 @@
 use binrw::{BinRead, BinWrite};
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 #[derive(Clone, Copy, PartialEq, PartialOrd, BinRead, BinWrite)]
 #[cfg_attr(test, derive(Debug))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[brw(little)]
 pub enum Version {
     #[brw(magic = b"VER 7.1\x00")]

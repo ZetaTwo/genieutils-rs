@@ -1,11 +1,15 @@
 use binrw::binrw;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 use crate::common::DebugString;
 use crate::common::UnitType;
 use crate::task::Task;
 use crate::versions::Version;
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct ResourceStorage {
     r#type: i16,
     amount: f32,
@@ -13,6 +17,7 @@ struct ResourceStorage {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct DamageGraphic {
     graphic_id: i16,
     damage_percent: i16,
@@ -20,6 +25,7 @@ struct DamageGraphic {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct DeadFish {
     walking_graphic: i16,
     running_graphic: i16,
@@ -40,6 +46,7 @@ struct DeadFish {
 #[binrw]
 #[br(import(version: Version))]
 #[bw(import(version: Version))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct Bird {
     default_task_id: i16,
     search_radius: f32,
@@ -70,12 +77,14 @@ struct Bird {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct AttackOrArmor {
     r#class: i16,
     amount: i16,
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct Type50 {
     base_armor: i16,
 
@@ -115,6 +124,7 @@ struct Type50 {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct Projectile {
     projectile_type: u8,
     smart_mode: u8,
@@ -124,6 +134,7 @@ struct Projectile {
     projectile_arc: f32,
 }
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct ResourceCost {
     r#type: i16,
     amount: i16,
@@ -131,6 +142,7 @@ struct ResourceCost {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct Creatable {
     resource_costs: (ResourceCost, ResourceCost, ResourceCost),
     train_time: i16,
@@ -161,6 +173,7 @@ struct Creatable {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct BuildingAnnex {
     unit_id: i16,
     misplacement_x: f32,
@@ -168,6 +181,7 @@ struct BuildingAnnex {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct Building {
     construction_graphic_id: i16,
     snow_graphic_id: i16,
@@ -200,6 +214,7 @@ struct Building {
 #[binrw]
 #[br(import(version: Version))]
 #[bw(import(version: Version))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Unit {
     r#type: u8,
     id: i16,

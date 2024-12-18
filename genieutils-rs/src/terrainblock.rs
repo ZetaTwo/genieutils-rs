@@ -1,11 +1,15 @@
 use binrw::binrw;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 use crate::common::DebugString;
 use crate::common::TERRAIN_COUNT;
 use crate::common::TERRAIN_UNITS_SIZE;
 use crate::common::TILE_TYPE_COUNT;
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct FrameData {
     frame_count: i16,
     angle_count: i16,
@@ -13,6 +17,7 @@ struct FrameData {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct Terrain {
     enabled: u8,
     random: u8,
@@ -63,6 +68,7 @@ struct Terrain {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct TileSize {
     width: i16,
     height: i16,
@@ -70,6 +76,7 @@ struct TileSize {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct TerrainBlock {
     virtual_function_ptr: u32,
     map_pointer: u32,

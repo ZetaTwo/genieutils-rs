@@ -2,7 +2,11 @@ use binrw::binrw;
 
 use crate::common::DebugString;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct EffectCommand {
     r#type: u8,
     a: i16,
@@ -12,6 +16,7 @@ struct EffectCommand {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Effect {
     name: DebugString,
 

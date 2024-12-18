@@ -1,9 +1,13 @@
 use binrw::binrw;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 pub const TILE_TYPE_COUNT: usize = 19;
 pub const TERRAIN_COUNT: usize = 200;
 pub const TERRAIN_UNITS_SIZE: usize = 30;
 
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy)]
 pub enum UnitType {
     EyeCandy = 10,
@@ -45,6 +49,7 @@ impl PartialOrd<UnitType> for u8 {
 #[binrw]
 #[brw(little)]
 #[br(assert(temp_size == 0x0A60, "DebugString temp_size invalid: {}", temp_size))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct DebugString {
     #[br(temp)]
     #[bw(calc = 0x0A60)]

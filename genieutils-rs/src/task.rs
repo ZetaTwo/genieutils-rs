@@ -1,6 +1,10 @@
 use binrw::binrw;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Task {
     task_type: i16,
     id: i16,

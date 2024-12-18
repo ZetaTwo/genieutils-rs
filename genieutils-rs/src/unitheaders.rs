@@ -1,8 +1,12 @@
 use binrw::binrw;
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Deserialize};
+
 use crate::task::Task;
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 struct TaskList {
     #[br(temp)]
     #[bw(try_calc = task_list.len().try_into())]
@@ -13,6 +17,7 @@ struct TaskList {
 }
 
 #[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct UnitHeaders {
     exists: u8,
 
