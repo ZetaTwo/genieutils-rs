@@ -4,7 +4,7 @@ pub const TILE_TYPE_COUNT: usize = 19;
 pub const TERRAIN_COUNT: usize = 200;
 pub const TERRAIN_UNITS_SIZE: usize = 30;
 
-#[derive(Clone, Copy, PartialEq, PartialOrd)]
+#[derive(Clone, Copy)]
 pub enum UnitType {
     EyeCandy = 10,
     Trees = 15,
@@ -18,30 +18,32 @@ pub enum UnitType {
     AoeTrees = 90,
 }
 
-impl TryFrom<u8> for UnitType {
-    type Error = std::io::Error;
+impl PartialEq<u8> for UnitType {
+    fn eq(&self, other: &u8) -> bool {
+        (*self as u8).eq(other)
+    }
+}
 
-    fn try_from(v: u8) -> Result<Self, Self::Error> {
-        match v {
-            x if x == Self::EyeCandy as u8 => Ok(Self::EyeCandy),
-            x if x == Self::Trees as u8 => Ok(Self::Trees),
-            x if x == Self::Flag as u8 => Ok(Self::Flag),
-            x if x == Self::DeadFish as u8 => Ok(Self::DeadFish),
-            x if x == Self::Bird as u8 => Ok(Self::Bird),
-            x if x == Self::Combatant as u8 => Ok(Self::Combatant),
-            x if x == Self::Projectile as u8 => Ok(Self::Projectile),
-            x if x == Self::Creatable as u8 => Ok(Self::Creatable),
-            x if x == Self::Building as u8 => Ok(Self::Building),
-            x if x == Self::AoeTrees as u8 => Ok(Self::AoeTrees),
-            _ => Err(std::io::Error::new(
-                std::io::ErrorKind::InvalidInput,
-                "invalid unit type",
-            )),
-        }
+impl PartialEq<UnitType> for u8 {
+    fn eq(&self, other: &UnitType) -> bool {
+        self.eq(&(*other as u8))
+    }
+}
+
+impl PartialOrd<u8> for UnitType {
+    fn partial_cmp(&self, other: &u8) -> Option<std::cmp::Ordering> {
+        Some((*self as u8).cmp(other))
+    }
+}
+
+impl PartialOrd<UnitType> for u8 {
+    fn partial_cmp(&self, other: &UnitType) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(&(*other as u8)))
     }
 }
 
 #[binrw]
+#[brw(little)]
 #[br(assert(temp_size == 0x0A60, "DebugString temp_size invalid: {}", temp_size))]
 pub struct DebugString {
     #[br(temp)]
@@ -55,3 +57,16 @@ pub struct DebugString {
     #[bw(map = |x: &String| x.as_bytes())]
     int_str: String,
 }
+
+//#[cfg(test)]
+/*impl std::fmt::Display for DebugString {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "DebugString: {}", self.int_str)
+    }
+}*/
+/*#[cfg(test)]
+impl std::fmt::Debug for DebugString {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "DebugString: {}", self.int_str)
+    }
+}*/

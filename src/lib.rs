@@ -15,17 +15,31 @@ mod unit;
 mod unitheaders;
 mod versions;
 
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+use datfile::DatFile;
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    fn parse_datfile() {
+        let data: Vec<u8> = std::fs::read("test/empires2_x2_p1.dat").unwrap();
+        let datfile = DatFile::parse_compressed(&data).unwrap();
+
+        println!("Version: {}", datfile.version);
+    }
+
+    #[test]
+    fn parse_serialize_datfile() {
+        let data: Vec<u8> = std::fs::read("test/empires2_x2_p1.dat").unwrap();
+
+        let inflated = DatFile::decompress(&data).unwrap();
+        let datfile = DatFile::parse(&inflated).unwrap();
+        let serialized = datfile.serialize().unwrap();
+
+        std::fs::write("test/cmp_inflated.dat", &inflated).unwrap();
+        std::fs::write("test/cmp_serialized.dat", &serialized).unwrap();
+
+        assert_eq!(inflated, serialized, "serialized data not equal to original data");
     }
 }

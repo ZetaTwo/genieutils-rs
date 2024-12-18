@@ -1,6 +1,13 @@
-use binrw::binrw;
+use std::io::Read;
+
 use binrw::helpers::args_iter_with;
-use binrw::BinRead;
+use binrw::{binrw, BinResult};
+use binrw::{BinRead, BinWrite};
+use flate2::read::DeflateDecoder;
+use flate2::write::DeflateEncoder;
+use flate2::Compression;
+use std::io::prelude::*;
+use std::io::Cursor;
 
 use crate::civ::Civ;
 use crate::effect::Effect;
@@ -16,16 +23,10 @@ use crate::unitheaders::UnitHeaders;
 use crate::versions::Version;
 
 #[binrw]
-#[bw(assert(float_ptr_terrain_tables.len() == terrain_pass_graphic_pointers.len() && terrain_pass_graphic_pointers.len() == terrain_restrictions.len(), "terrain_tables lists lengths unmatched: {} != {} != {}", float_ptr_terrain_tables.len(), terrain_pass_graphic_pointers.len(), terrain_restrictions.len()))]
-struct DatFile {
-    #[br(count = 8)]
-    #[br(try_map = |x: Vec<u8>| {
-        String::from_utf8(x)
-            .map_err(|err|std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?
-            .try_into()
-    })]
-    #[bw(map = |x: &Version| x.to_string().bytes().take(8).collect::<Vec<u8>>())]
-    version: Version,
+#[brw(little)]
+//#[bw(assert(float_ptr_terrain_tables.len() == terrain_pass_graphic_pointers.len() && terrain_pass_graphic_pointers.len() == terrain_restrictions.len(), "terrain_tables lists lengths unmatched: {} != {} != {}", float_ptr_terrain_tables.len(), terrain_pass_graphic_pointers.len(), terrain_restrictions.len()))]
+pub struct DatFile {
+    pub version: Version,
 
     #[br(temp)]
     #[bw(try_calc = float_ptr_terrain_tables.len().try_into())]
@@ -36,11 +37,11 @@ struct DatFile {
     // TODO: is this truly correct?
     #[bw(calc = {
         terrain_restrictions
-          .get(0)
+          .first()
           .map(|restriction: &TerrainRestriction| restriction.passable_buildable_dmg_multiplier.len())
           .unwrap_or(0)
     })]
-    #[bw(try_map = |x: usize| x.try_into())]
+    #[bw(try_map = |x: usize| TryInto::<i16>::try_into(x))]
     terrains_used_1: usize,
 
     #[br(count = terrain_restrictions_size)]
@@ -68,7 +69,7 @@ struct DatFile {
     sounds: Vec<Sound>,
 
     #[br(temp)]
-    #[bw(try_calc = graphics.len().try_into())]
+    #[bw(try_calc = graphic_pointers.len().try_into())]
     graphics_size: i16,
 
     #[br(count = graphics_size)]
@@ -78,7 +79,7 @@ struct DatFile {
         if pointer == 0 {
             Ok(None)
         } else {
-            <Graphic as BinRead>::read_options(reader, endian, ()).map(|x|Some(x))
+            <Graphic as BinRead>::read_options(reader, endian, ()).map(Some)
         }
     }
     ))]
@@ -107,7 +108,7 @@ struct DatFile {
         count = civs_size,
         args { inner: (version,)  }
     )]
-    #[bw(args (version,))]
+    #[bw(args (*version,))]
     civs: Vec<Civ>,
 
     #[br(temp)]
@@ -124,4 +125,40 @@ struct DatFile {
     razing_kill_rate: u32,
     razing_kill_total: u32,
     tech_tree: TechTree,
+}
+
+impl DatFile {
+    pub fn parse_compressed(data: &Vec<u8>) -> BinResult<Self> {
+        let deflated = Self::decompress(data)?;
+        let mut stream = Cursor::new(deflated);
+        Self::read(&mut stream)
+    }
+
+    pub fn parse(data: &Vec<u8>) -> BinResult<Self> {
+        let mut stream = Cursor::new(data);
+        Self::read(&mut stream)
+    }
+
+    pub fn decompress(data: &Vec<u8>) -> Result<Vec<u8>, binrw::Error> {
+        let mut deflater = DeflateDecoder::new(&data[..]);
+        let mut deflated: Vec<u8> = Vec::new();
+        deflater.read_to_end(&mut deflated)?;
+        Ok(deflated)
+    }
+
+    pub fn serialize(&self) -> Result<Vec<u8>, binrw::Error> {
+        let mut writer = Cursor::new(Vec::new());
+        self.write(&mut writer)?;
+        let serialized = writer.into_inner();
+        Ok(serialized)
+    }
+
+    pub fn pack(&self) -> Result<Vec<u8>, binrw::Error> {
+        let serialized = self.serialize()?;
+        let mut inflater = DeflateEncoder::new(Vec::new(), Compression::default());
+        inflater.write_all(&serialized)?;
+        let inflated = inflater.finish()?;
+
+        Ok(inflated)
+    }
 }

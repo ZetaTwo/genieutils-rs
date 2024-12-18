@@ -201,9 +201,7 @@ struct Building {
 #[br(import(version: Version))]
 #[bw(import(version: Version))]
 pub struct Unit {
-    #[br(try_map = |x: u8| UnitType::try_from(x))]
-    #[bw(map = |x: &UnitType| *x as u8)]
-    r#type: UnitType,
+    r#type: u8,
     id: i16,
     language_dll_name: i32,
     language_dll_creation: i32,
@@ -269,7 +267,7 @@ pub struct Unit {
 
     #[br(temp)]
     #[bw(try_calc = damage_graphics.len().try_into())]
-    damage_graphic_size: i16,
+    damage_graphic_size: u8,
 
     #[br(count = damage_graphic_size)]
     damage_graphics: Vec<DamageGraphic>,
@@ -286,33 +284,33 @@ pub struct Unit {
     copy_id: i16,
     base_id: i16,
 
-    #[br(if(r#type != UnitType::AoeTrees))]
-    #[bw(if(r#type != UnitType::AoeTrees as u8))]
+    #[br(if(r#type >= UnitType::Flag))]
+    #[bw(if(*r#type >= UnitType::Flag))]
     speed: Option<f32>,
 
     #[br(if(r#type >= UnitType::DeadFish))]
-    #[bw(if(r#type >= UnitType::DeadFish as u8))]
+    #[bw(if(*r#type >= UnitType::DeadFish))]
     dead_fish: Option<DeadFish>,
 
     #[br(if(r#type >= UnitType::Bird))]
-    #[bw(if(r#type >= UnitType::Bird as u8))]
+    #[bw(if(*r#type >= UnitType::Bird))]
     #[bw(args(version))]
     #[br(args(version))]
     bird: Option<Bird>,
 
     #[br(if(r#type >= UnitType::Combatant))]
-    #[bw(if(r#type >= UnitType::Combatant as u8))]
+    #[bw(if(*r#type >= UnitType::Combatant))]
     type_50: Option<Type50>,
 
     #[br(if(r#type == UnitType::Projectile))]
-    #[bw(if(r#type == UnitType::Projectile as u8))]
+    #[bw(if(*r#type == UnitType::Projectile))]
     projectile: Option<Projectile>,
 
     #[br(if(r#type >= UnitType::Creatable))]
-    #[bw(if(r#type >= UnitType::Creatable as u8))]
+    #[bw(if(*r#type >= UnitType::Creatable))]
     creatable: Option<Creatable>,
 
     #[br(if(r#type == UnitType::Building))]
-    #[bw(if(r#type == UnitType::Building as u8))]
+    #[bw(if(*r#type == UnitType::Building))]
     building: Option<Building>,
 }

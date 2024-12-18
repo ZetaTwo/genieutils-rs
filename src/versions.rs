@@ -1,14 +1,26 @@
-#[derive(Clone, Copy, PartialEq, PartialOrd)]
+use binrw::{BinRead, BinWrite};
+
+#[derive(Clone, Copy, PartialEq, PartialOrd, BinRead, BinWrite)]
+#[cfg_attr(test, derive(Debug))]
+#[brw(little)]
 pub enum Version {
-    Undefined = 0,
+    #[brw(magic = b"VER 7.1\x00")]
     Ver71 = 71,
+    #[brw(magic = b"VER 7.2\x00")]
     Ver72 = 72,
+    #[brw(magic = b"VER 7.3\x00")]
     Ver73 = 73,
+    #[brw(magic = b"VER 7.4\x00")]
     Ver74 = 74,
+    #[brw(magic = b"VER 7.5\x00")]
     Ver75 = 75,
+    #[brw(magic = b"VER 7.6\x00")]
     Ver76 = 76,
+    #[brw(magic = b"VER 7.7\x00")]
     Ver77 = 77,
+    #[brw(magic = b"VER 7.8\x00")]
     Ver78 = 78,
+    Undefined = 0,
 }
 
 impl std::fmt::Display for Version {
@@ -27,23 +39,19 @@ impl std::fmt::Display for Version {
     }
 }
 
-impl TryFrom<String> for Version {
-    type Error = std::io::Error;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        match value.as_str() {
-            "VER 7.1" => Ok(Self::Ver71),
-            "VER 7.2" => Ok(Self::Ver72),
-            "VER 7.3" => Ok(Self::Ver73),
-            "VER 7.4" => Ok(Self::Ver74),
-            "VER 7.5" => Ok(Self::Ver75),
-            "VER 7.6" => Ok(Self::Ver76),
-            "VER 7.7" => Ok(Self::Ver77),
-            "VER 7.8" => Ok(Self::Ver78),
-            _ => Err(std::io::Error::new(
-                std::io::ErrorKind::InvalidInput,
-                "unknown version",
-            )),
-        }
+    #[test]
+    fn parse_version() {
+        let version = Version::read(&mut std::io::Cursor::new(b"VER 7.8\x00")).unwrap();
+        assert_eq!(Version::Ver78, version);
+    }
+
+    #[test]
+    fn parse_version_invalid() {
+        let version = Version::read(&mut std::io::Cursor::new(b"VER 1.1\x00")).unwrap();
+        assert_eq!(Version::Undefined, version);
     }
 }

@@ -24,7 +24,7 @@ pub struct Civ {
     icon_set: u8,
 
     #[br(temp)]
-    #[bw(try_calc = units.len().try_into())]
+    #[bw(try_calc = unit_pointers.len().try_into())]
     units_size: i16,
 
     #[br(count = units_size)]
@@ -35,10 +35,10 @@ pub struct Civ {
         if pointer == 0 {
             Ok(None)
         } else {
-            <Unit as BinRead>::read_options(reader, endian, (version,)).map(|x|Some(x))
+            <Unit as BinRead>::read_options(reader, endian, (version,)).map(Some)
         }
     }
     ))]
-    #[bw(args (version,))]
+    #[bw(args(version,))]
     units: Vec<Option<Unit>>,
 }

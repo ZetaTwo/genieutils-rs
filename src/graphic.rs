@@ -27,6 +27,7 @@ struct GraphicAngleSound {
 }
 
 #[binrw]
+#[brw(little)]
 pub struct Graphic {
     name: DebugString,
     file_name: DebugString,
@@ -48,8 +49,9 @@ pub struct Graphic {
     angle_sounds_used: u8,
     frame_count: i16,
 
-    #[br(temp)]
-    #[bw(try_calc = angle_sounds.len().try_into())]
+    // TODO: Is this correct? Why is the count set even when unused?
+    /*#[br(temp)]
+    #[bw(try_calc = angle_sounds.len().try_into())]*/
     angle_count: i16,
 
     speed_multiplier: f32,
@@ -63,6 +65,6 @@ pub struct Graphic {
     #[br(count = delta_count)]
     deltas: Vec<GraphicDelta>,
 
-    #[br(count = angle_count)]
+    #[br(count = angle_count, if(angle_sounds_used != 0))]
     angle_sounds: Vec<GraphicAngleSound>,
 }
