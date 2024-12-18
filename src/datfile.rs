@@ -128,7 +128,7 @@ pub struct DatFile {
 }
 
 impl DatFile {
-    pub fn parse_compressed(data: &Vec<u8>) -> BinResult<Self> {
+    pub fn parse_compressed(data: &[u8]) -> BinResult<Self> {
         let deflated = Self::decompress(data)?;
         let mut stream = Cursor::new(deflated);
         Self::read(&mut stream)
@@ -139,8 +139,8 @@ impl DatFile {
         Self::read(&mut stream)
     }
 
-    pub fn decompress(data: &Vec<u8>) -> Result<Vec<u8>, binrw::Error> {
-        let mut deflater = DeflateDecoder::new(&data[..]);
+    pub fn decompress(data: &[u8]) -> Result<Vec<u8>, binrw::Error> {
+        let mut deflater = DeflateDecoder::new(data);
         let mut deflated: Vec<u8> = Vec::new();
         deflater.read_to_end(&mut deflated)?;
         Ok(deflated)

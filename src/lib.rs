@@ -15,11 +15,10 @@ mod unit;
 mod unitheaders;
 mod versions;
 
-use datfile::DatFile;
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use datfile::DatFile;
 
     #[test]
     fn parse_datfile() {
@@ -40,6 +39,9 @@ mod tests {
         std::fs::write("test/cmp_inflated.dat", &inflated).unwrap();
         std::fs::write("test/cmp_serialized.dat", &serialized).unwrap();
 
-        assert_eq!(inflated, serialized, "serialized data not equal to original data");
+        assert_eq!(
+            inflated, serialized,
+            "serialized data not equal to original data"
+        );
     }
 }
