@@ -8,25 +8,17 @@ use pyo3::prelude::*;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct TerrainPassGraphic {
-    exit_tile_sprite_id: i32,
-    enter_tile_sprite_id: i32,
-    walk_tile_sprite_id: i32,
-    walk_sprite_rate: i32,
+    pub exit_tile_sprite_id: i32,
+    pub enter_tile_sprite_id: i32,
+    pub walk_tile_sprite_id: i32,
+    pub walk_sprite_rate: i32,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 #[br(import(terrain_count: usize))]
 #[bw(assert(passable_buildable_dmg_multiplier.len() == terrain_pass_graphics.len(), "terrain restriciton lists lengths unmatched: {} != {}", passable_buildable_dmg_multiplier.len(), terrain_pass_graphics.len()))]
 pub struct TerrainRestriction {

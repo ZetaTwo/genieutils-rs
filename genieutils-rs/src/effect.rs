@@ -10,11 +10,7 @@ use pyo3::prelude::*;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 struct EffectCommand {
     r#type: u8,
     a: i16,
@@ -25,11 +21,7 @@ struct EffectCommand {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct Effect {
     name: DebugString,
 

@@ -10,11 +10,7 @@ use crate::task::Task;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 struct TaskList {
     #[br(temp)]
     #[bw(try_calc = task_list.len().try_into())]
@@ -26,11 +22,7 @@ struct TaskList {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct UnitHeaders {
     exists: u8,
 

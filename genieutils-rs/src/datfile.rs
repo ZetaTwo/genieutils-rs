@@ -31,11 +31,11 @@ use crate::versions::Version;
 #[binrw]
 #[brw(little)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
+/*#[cfg_attr(
     feature = "pyo3",
     pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+)]*/
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 #[bw(assert(float_ptr_terrain_tables.len() == terrain_pass_graphic_pointers.len() && terrain_pass_graphic_pointers.len() == terrain_restrictions.len(), "terrain_tables lists lengths unmatched: {} != {} != {}", float_ptr_terrain_tables.len(), terrain_pass_graphic_pointers.len(), terrain_restrictions.len()))]
 pub struct DatFile {
     pub version: Version,
@@ -174,12 +174,16 @@ impl DatFile {
         Ok(inflated)
     }
 }
-
+/*
 #[cfg(feature = "pyo3")]
 mod python {
     use super::DatFile;
     use pyo3::exceptions::PyValueError;
     use pyo3::prelude::*;
+
+
+
+
     #[pymethods]
     impl DatFile {
         #[staticmethod]
@@ -229,3 +233,4 @@ mod python {
         }
     }
 }
+*/

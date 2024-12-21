@@ -9,10 +9,8 @@ use pyo3::prelude::*;
 #[derive(Clone, Copy, PartialEq, PartialOrd, BinRead, BinWrite)]
 #[cfg_attr(test, derive(Debug))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all, eq, eq_int)
-)]
+//#[cfg_attr( feature = "pyo3", derive(IntoPyObject, FromPyObject))]
+#[cfg_attr(feature = "pyo3", pyclass(module = "genieutils_rspy", eq, eq_int))]
 #[brw(little)]
 pub enum Version {
     #[brw(magic = b"VER 7.1\x00")]

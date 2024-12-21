@@ -10,11 +10,7 @@ use pyo3::prelude::*;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 struct ResearchResourceCost {
     r#type: i16,
     amount: i16,
@@ -23,11 +19,7 @@ struct ResearchResourceCost {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct Tech {
     required_techs: (i16, i16, i16, i16, i16, i16),
     resource_costs: (

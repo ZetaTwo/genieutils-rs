@@ -1,7 +1,12 @@
 use pyo3::prelude::*;
 
+//mod common;
 mod datfile;
 //mod playercolour;
+//mod playercolour;
+//mod sound;
+//mod terrainrestrictions;
+//mod versions;
 
 //use genieutils::datfile::DatFile;
 

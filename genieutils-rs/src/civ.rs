@@ -13,14 +13,9 @@ use crate::unit::Unit;
 use crate::versions::Version;
 
 #[binrw]
-#[br(import(version: Version))]
-#[bw(import(version: Version))]
+#[brw(import(version: Version))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct Civ {
     player_type: u8,
     name: DebugString,

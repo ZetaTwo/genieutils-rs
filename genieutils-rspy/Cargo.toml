@@ -10,4 +10,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = "0.23.1"
-genieutils = { path = "../genieutils-rs", features = ["pyo3"] }
+genieutils = { path = "../genieutils-rs", features=["pyo3"] }

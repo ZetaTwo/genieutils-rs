@@ -10,34 +10,26 @@ use pyo3::prelude::*;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
-struct SoundItem {
-    filename: DebugString,
-    resource_id: i32,
-    probability: i16,
-    civilization: i16,
-    icon_set: i16,
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
+pub struct SoundItem {
+    pub filename: DebugString,
+    pub resource_id: i32,
+    pub probability: i16,
+    pub civilization: i16,
+    pub icon_set: i16,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct Sound {
-    id: i16,
-    play_delay: i16,
+    pub id: i16,
+    pub play_delay: i16,
     #[br(temp)]
     #[bw(try_calc = items.len().try_into())]
     item_size: i16,
-    cache_time: i32,
-    total_probability: i16,
+    pub cache_time: i32,
+    pub total_probability: i16,
     #[br(count = item_size)]
-    items: Vec<SoundItem>,
+    pub items: Vec<SoundItem>,
 }

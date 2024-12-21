@@ -8,11 +8,7 @@ use pyo3::prelude::*;
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct Common {
     slots_used: i32,
     unit_research: (i32, i32, i32, i32, i32, i32, i32, i32, i32, i32),
@@ -21,11 +17,7 @@ pub struct Common {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct TechTreeAge {
     id: i32,
     status: u8,
@@ -58,11 +50,7 @@ pub struct TechTreeAge {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct BuildingConnection {
     id: i32,
     status: u8,
@@ -93,11 +81,7 @@ pub struct BuildingConnection {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct UnitConnection {
     id: i32,
     status: u8,
@@ -117,11 +101,7 @@ pub struct UnitConnection {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct ResearchConnection {
     id: i32,
     status: u8,
@@ -151,11 +131,7 @@ pub struct ResearchConnection {
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct TechTree {
     #[br(temp)]
     #[bw(try_calc = tech_tree_ages.len().try_into())]
@@ -180,4 +156,11 @@ pub struct TechTree {
     pub unit_connections: Vec<UnitConnection>,
     #[br(count = research_count)]
     pub research_connections: Vec<ResearchConnection>,
+}
+
+#[cfg(feature = "pyo3")]
+mod python {
+    use super::TechTree;
+    use pyo3::exceptions::PyValueError;
+    use pyo3::prelude::*;
 }

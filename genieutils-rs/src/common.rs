@@ -10,8 +10,10 @@ pub const TILE_TYPE_COUNT: usize = 19;
 pub const TERRAIN_COUNT: usize = 200;
 pub const TERRAIN_UNITS_SIZE: usize = 30;
 
+#[derive(Clone, Copy, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Clone, Copy)]
+//#[cfg_attr( feature = "pyo3", derive(IntoPyObject, FromPyObject))]
+#[cfg_attr(feature = "pyo3", pyclass(module = "genieutils_rspy", eq, eq_int))]
 pub enum UnitType {
     EyeCandy = 10,
     Trees = 15,
@@ -53,22 +55,20 @@ impl PartialOrd<UnitType> for u8 {
 #[brw(little)]
 #[br(assert(temp_size == 0x0A60, "DebugString temp_size invalid: {}", temp_size))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]
-#[derive(Clone)]
+#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 pub struct DebugString {
     #[br(temp)]
     #[bw(calc = 0x0A60)]
     temp_size: u16,
 
-    size: u16,
+    #[br(temp)]
+    #[bw(try_calc = int_str.len().try_into())]
+    pub size: u16,
 
     #[br(count = size)]
     #[br(try_map = |x: Vec<u8>| String::from_utf8(x))]
     #[bw(map = |x: &String| x.as_bytes())]
-    int_str: String,
+    pub int_str: String,
 }
 
 //#[cfg(test)]
