@@ -1,4 +1,7 @@
+use std::borrow::Borrow;
+
 use genieutils::datfile::DatFile;
+use pyo3::conversion::FromPyObjectBound;
 use pyo3::prelude::*;
 /*
 use pyo3::pyclass;
@@ -143,14 +146,25 @@ impl PyDatFile {
     }
 
     /*  #[pyo3(name = "serialize")]
-    fn py_serialize(&self, py: Python<'_>) -> PyResult<Vec<u8>> {
-        let data = self.borrow()
+        fn py_serialize(&self, py: Python<'_>) -> PyResult<Vec<u8>> {
+            let data = self.borrow()
 
+                .serialize()
+                .map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(data)
+        }
+    */
+    #[staticmethod]
+    #[pyo3(name = "serialize")]
+    fn py_serialize(py: Python<'_>, data: Py<PyAny>) -> PyResult<Vec<u8>> {
+        let pydatfile = data.borrow().bind_borrowed(py);
+        let datfile = DatFile::from_py_object_bound(pydatfile)?;
+        let data = datfile
             .serialize()
             .map_err(|err| PyValueError::new_err(err.to_string()))?;
         Ok(data)
     }
-
+    /*
     #[pyo3(name = "pack")]
     fn py_pack(&self, py: Python<'_>) -> PyResult<Vec<u8>> {
         let data = self
@@ -160,4 +174,14 @@ impl PyDatFile {
             .map_err(|err| PyValueError::new_err(err.to_string()))?;
         Ok(data)
     }*/
+    #[staticmethod]
+    #[pyo3(name = "pack")]
+    fn py_pack(py: Python<'_>, data: Py<PyAny>) -> PyResult<Vec<u8>> {
+        let pydatfile = data.borrow().bind_borrowed(py);
+        let datfile = DatFile::from_py_object_bound(pydatfile)?;
+        let data = datfile
+            .pack()
+            .map_err(|err| PyValueError::new_err(err.to_string()))?;
+        Ok(data)
+    }
 }
