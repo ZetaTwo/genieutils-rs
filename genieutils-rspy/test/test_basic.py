@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 
 import genieutils_rspy
+import sys
 
 with open('test/empires2_x2_p1.dat', 'rb') as fin:
     compressed = fin.read()
 
-decompressed = genieutils_rspy.DatFile.decompress(compressed)
+try:
+    decompressed = genieutils_rspy.DatFile.decompress(compressed)
+except Exception as e:
+    print(e.with_traceback())
+    sys.exit(1)
+
 datfile = genieutils_rspy.DatFile.parse(decompressed)
 
 

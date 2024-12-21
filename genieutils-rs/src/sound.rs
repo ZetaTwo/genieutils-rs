@@ -36,8 +36,8 @@ pub struct Sound {
 
 #[cfg(feature = "pyo3")]
 mod python {
-    use super::SoundItem;
     use super::Sound;
+    use super::SoundItem;
     use pyo3::prelude::*;
     use pyo3::types::PyList;
     #[pyclass(name = "SoundItem", module = "genieutils_rspy")]
@@ -84,14 +84,12 @@ mod python {
         type Error = PyErr;
 
         fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
-            let items = self.items.into_pyobject(py)?.downcast_into()?.unbind();
-
             let res = PySound {
                 id: self.id,
                 play_delay: self.play_delay,
                 cache_time: self.cache_time,
                 total_probability: self.total_probability,
-                items: items,
+                items: self.items.into_pyobject(py)?.downcast_into()?.unbind(),
             };
             Ok(Py::new(py, res)?.into_bound(py))
         }

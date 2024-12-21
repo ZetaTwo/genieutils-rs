@@ -15,7 +15,7 @@ use crate::versions::Version;
 #[binrw]
 #[brw(import(version: Version))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
+#[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 pub struct Civ {
     player_type: u8,
     name: DebugString,
@@ -48,4 +48,51 @@ pub struct Civ {
     ))]
     #[bw(args(version,))]
     units: Vec<Option<Unit>>,
+}
+
+#[cfg(feature = "pyo3")]
+mod python {
+    use super::Civ;
+
+    use pyo3::prelude::*;
+    use pyo3::types::PyList;
+    use pyo3::types::PyString;
+    #[pyclass(name = "Civ", module = "genieutils_rspy")]
+    #[pyo3(get_all, set_all)]
+
+    pub struct PyCiv {
+        player_type: u8,
+        name: Py<PyString>,
+        tech_tree_id: i16,
+        team_bonus_id: i16,
+        resources: Py<PyList>,
+        icon_set: u8,
+        unit_pointers: Py<PyList>,
+        units: Py<PyList>,
+    }
+
+    impl<'py> IntoPyObject<'py> for Civ {
+        type Target = PyCiv;
+        type Output = Bound<'py, Self::Target>;
+        type Error = PyErr;
+
+        fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
+            let res = PyCiv {
+                player_type: self.player_type,
+                name: self.name.into_pyobject(py)?.unbind(),
+                tech_tree_id: self.tech_tree_id,
+                team_bonus_id: self.team_bonus_id,
+                resources: self.resources.into_pyobject(py)?.downcast_into()?.unbind(),
+                icon_set: self.icon_set,
+                unit_pointers: self
+                    .unit_pointers
+                    .into_pyobject(py)?
+                    .downcast_into()?
+                    .unbind(),
+                units: self.units.into_pyobject(py)?.downcast_into()?.unbind(),
+            };
+
+            Ok(Py::new(py, res)?.into_bound(py))
+        }
+    }
 }

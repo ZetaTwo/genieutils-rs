@@ -31,10 +31,6 @@ use crate::versions::Version;
 #[binrw]
 #[brw(little)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-/*#[cfg_attr(
-    feature = "pyo3",
-    pyclass(module = "genieutils_rspy", get_all, set_all)
-)]*/
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 #[bw(assert(float_ptr_terrain_tables.len() == terrain_pass_graphic_pointers.len() && terrain_pass_graphic_pointers.len() == terrain_restrictions.len(), "terrain_tables lists lengths unmatched: {} != {} != {}", float_ptr_terrain_tables.len(), terrain_pass_graphic_pointers.len(), terrain_restrictions.len()))]
 pub struct DatFile {
@@ -175,140 +171,160 @@ impl DatFile {
     }
 }
 
-
 #[cfg(feature = "pyo3")]
 pub mod python {
+    use std::borrow::Borrow;
+
     use super::DatFile;
     use super::Version;
+    use crate::randommaps::python::PyRandomMaps;
+    use crate::techtree::python::PyTechTree;
+    use crate::terrainblock::python::PyTerrainBlock;
+
+    use pyo3::exceptions::PyValueError;
     use pyo3::prelude::*;
     use pyo3::types::PyList;
-    use pyo3::exceptions::PyValueError;
-#[pyclass(name = "DatFile", module = "genieutils_rspy")]
-pub struct PyDatFile {
-    #[pyo3(get, set)]
-    pub version: Py<Version>,
-    #[pyo3(get, set)]
-    pub float_ptr_terrain_tables: Py<PyList>,
-    #[pyo3(get, set)]
-    pub terrain_pass_graphic_pointers: Py<PyList>,
-    //#[pyo3(get, set)]
-    //pub terrain_restrictions: Py<PyList>,
-    #[pyo3(get, set)]
-    pub player_colours: Py<PyList>,
-    #[pyo3(get, set)]
-    pub sounds: Py<PyList>,
-    //#[pyo3(get, set)]
-    //graphic_pointers: Py<PyList>,
-    //#[pyo3(get, set)]
-    //pub graphics: Vec<Option<Py<PyGraphic>>>,
-    //#[pyo3(get, set)]
-    //pub terrain_block: Py<PyTerrainBlock>,
-    //#[pyo3(get, set)]
-    //pub random_maps: Py<PyRandomMaps>,
-    //#[pyo3(get, set)]
-    //pub effects: Vec<Py<PyEffect>>,
-    //#[pyo3(get, set)]
-    //pub unit_headers: Vec<Py<PyUnitHeaders>>,
-    //#[pyo3(get, set)]
-    //pub civs: Vec<Py<PyCiv>>,
-    //#[pyo3(get, set)]
-    //pub techs: Vec<Py<PyTech>>,
-    #[pyo3(get, set)]
-    pub time_slice: u32,
-    #[pyo3(get, set)]
-    pub unit_kill_rate: u32,
-    #[pyo3(get, set)]
-    pub unit_kill_total: u32,
-    #[pyo3(get, set)]
-    pub unit_hit_point_rate: u32,
-    #[pyo3(get, set)]
-    pub unit_hit_point_total: u32,
-    #[pyo3(get, set)]
-    pub razing_kill_rate: u32,
-    #[pyo3(get, set)]
-    pub razing_kill_total: u32,
-    //pub tech_tree: Py<PyTechTree>,
-}
 
-impl<'py> IntoPyObject<'py> for DatFile {
-    type Target = PyDatFile;
-    type Output = Bound<'py, Self::Target>;
-    type Error = PyErr;
-
-    fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
-        let res = PyDatFile {
-            version: self.version.into_pyobject(py)?.unbind(),
-            float_ptr_terrain_tables: self.float_ptr_terrain_tables.into_pyobject(py)?.downcast_into()?.unbind(),
-            terrain_pass_graphic_pointers: self.terrain_pass_graphic_pointers.into_pyobject(py)?.downcast_into()?.unbind(),
-            //pub terrain_restrictions: Py<PyList>,
-            player_colours: self.player_colours.into_pyobject(py)?.downcast_into()?.unbind(),
-            sounds: self.sounds.into_pyobject(py)?.downcast_into()?.unbind(),
-            //graphic_pointers: Py<PyList>,
-            //pub graphics: Vec<Option<Py<PyGraphic>>>,
-            //pub terrain_block: Py<PyTerrainBlock>,
-            //pub random_maps: Py<PyRandomMaps>,
-            //pub effects: Vec<Py<PyEffect>>,
-            //pub unit_headers: Vec<Py<PyUnitHeaders>>,
-            //pub civs: Vec<Py<PyCiv>>,
-            //pub techs: Vec<Py<PyTech>>,
-            time_slice: self.time_slice,
-            unit_kill_rate: self.unit_kill_rate,
-            unit_kill_total: self.unit_kill_total,
-            unit_hit_point_rate: self.unit_hit_point_rate,
-            unit_hit_point_total: self.unit_hit_point_total,
-            razing_kill_rate: self.razing_kill_rate,
-            razing_kill_total: self.razing_kill_total,
-            //pub tech_tree: Py<PyTechTree>,
-        };
-
-        Ok(Py::new(py, res)?.into_bound(py))
-    }
-}
-
-#[pymethods]
-impl PyDatFile {
-    #[staticmethod]
-    #[pyo3(name="parse_compressed")]
-    fn parse_compressed(py: Python<'_>, data: &[u8]) -> PyResult<Py<Self>> {
-        let datfile = DatFile::parse_compressed(data)
-            .map_err(|err| PyValueError::new_err(err.to_string()))?;
-        Ok(datfile.into_pyobject(py)?.unbind())
+    #[pyclass(name = "DatFile", module = "genieutils_rspy")]
+    #[pyo3(get_all, set_all)]
+    pub struct PyDatFile {
+        pub version: Py<Version>,
+        pub float_ptr_terrain_tables: Py<PyList>,
+        pub terrain_pass_graphic_pointers: Py<PyList>,
+        pub terrain_restrictions: Py<PyList>,
+        pub player_colours: Py<PyList>,
+        pub sounds: Py<PyList>,
+        pub graphic_pointers: Py<PyList>,
+        pub graphics: Py<PyList>,
+        pub terrain_block: Py<PyTerrainBlock>,
+        pub random_maps: Py<PyRandomMaps>,
+        pub effects: Py<PyList>,
+        pub unit_headers: Py<PyList>,
+        pub civs: Py<PyList>,
+        pub techs: Py<PyList>,
+        pub time_slice: u32,
+        pub unit_kill_rate: u32,
+        pub unit_kill_total: u32,
+        pub unit_hit_point_rate: u32,
+        pub unit_hit_point_total: u32,
+        pub razing_kill_rate: u32,
+        pub razing_kill_total: u32,
+        pub tech_tree: Py<PyTechTree>,
     }
 
-    #[staticmethod]
-    #[pyo3(name="parse")]
-    fn parse(py: Python<'_>, data: &[u8]) -> PyResult<Py<Self>> {
-        let datfile = DatFile::parse(data)
-            .map_err(|err| PyValueError::new_err(err.to_string()))?;
-        Ok(datfile.into_pyobject(py)?.unbind())
+    impl<'py> IntoPyObject<'py> for DatFile {
+        type Target = PyDatFile;
+        type Output = Bound<'py, Self::Target>;
+        type Error = PyErr;
+
+        fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
+            let res = PyDatFile {
+                version: self.version.into_pyobject(py)?.unbind(),
+                float_ptr_terrain_tables: self
+                    .float_ptr_terrain_tables
+                    .into_pyobject(py)?
+                    .downcast_into()?
+                    .unbind(),
+                terrain_pass_graphic_pointers: self
+                    .terrain_pass_graphic_pointers
+                    .into_pyobject(py)?
+                    .downcast_into()?
+                    .unbind(),
+                terrain_restrictions: self
+                    .terrain_restrictions
+                    .into_pyobject(py)?
+                    .downcast_into()?
+                    .unbind(),
+                player_colours: self
+                    .player_colours
+                    .into_pyobject(py)?
+                    .downcast_into()?
+                    .unbind(),
+                sounds: self.sounds.into_pyobject(py)?.downcast_into()?.unbind(),
+                graphic_pointers: self
+                    .graphic_pointers
+                    .into_pyobject(py)?
+                    .downcast_into()?
+                    .unbind(),
+                graphics: self.graphics.into_pyobject(py)?.downcast_into()?.unbind(),
+                terrain_block: self.terrain_block.into_pyobject(py)?.unbind(),
+                random_maps: self.random_maps.into_pyobject(py)?.unbind(),
+                effects: self.effects.into_pyobject(py)?.downcast_into()?.unbind(),
+                unit_headers: self
+                    .unit_headers
+                    .into_pyobject(py)?
+                    .downcast_into()?
+                    .unbind(),
+                civs: self.civs.into_pyobject(py)?.downcast_into()?.unbind(),
+                techs: self.techs.into_pyobject(py)?.downcast_into()?.unbind(),
+                time_slice: self.time_slice,
+                unit_kill_rate: self.unit_kill_rate,
+                unit_kill_total: self.unit_kill_total,
+                unit_hit_point_rate: self.unit_hit_point_rate,
+                unit_hit_point_total: self.unit_hit_point_total,
+                razing_kill_rate: self.razing_kill_rate,
+                razing_kill_total: self.razing_kill_total,
+                tech_tree: self.tech_tree.into_pyobject(py)?.unbind(),
+            };
+
+            Ok(Py::new(py, res)?.into_bound(py))
+        }
     }
 
-    #[staticmethod]
-    #[pyo3(name="decompress")]
-    fn decompress(data: &[u8]) -> PyResult<Vec<u8>> {
-        let data =
-            DatFile::decompress(data).map_err(|err| PyValueError::new_err(err.to_string()))?;
-        Ok(data)
+    #[pymethods]
+    impl PyDatFile {
+        #[staticmethod]
+        #[pyo3(name = "parse_compressed")]
+        fn parse_compressed(py: Python<'_>, data: &[u8]) -> PyResult<Py<Self>> {
+            let datfile = DatFile::parse_compressed(data)
+                .map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(datfile.into_pyobject(py)?.unbind())
+        }
+
+        #[staticmethod]
+        #[pyo3(name = "parse")]
+        fn parse(py: Python<'_>, data: &[u8]) -> PyResult<Py<Self>> {
+            let datfile =
+                DatFile::parse(data).map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(datfile.into_pyobject(py)?.unbind())
+        }
+
+        #[staticmethod]
+        #[pyo3(name = "decompress")]
+        fn decompress(data: &[u8]) -> PyResult<Vec<u8>> {
+            let data =
+                DatFile::decompress(data).map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(data)
+        }
+
+        #[staticmethod]
+        #[pyo3(name = "serialize")]
+        fn serialize(data: &PyDatFile, py: Python<'_>) -> PyResult<Vec<u8>> {
+            
+        }
+
+        /*#[pyo3(name="serialize")]
+        fn serialize(&self, py: Python<'_>) -> PyResult<Vec<u8>> {
+            
+
+
+            DatFile::extract_bound(self);
+            let y = Py::from(self);
+            //let datfile: DatFile = self.into_pyobject(py)?.extract()?;
+            let x = self.clone_ref();
+            let data = datfile
+                .serialize()
+                .map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(data)
+        }
+
+        #[pyo3(name="pack")]
+        fn pack(&self, py: Python<'_>) -> PyResult<Vec<u8>> {
+            let datfile: DatFile = self.clone().into_pyobject(py)?.extract()?;
+            let data = datfile
+                .pack()
+                .map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(data)
+        }*/
     }
-
-    /*#[pyo3(name="serialize")]
-    fn serialize(&self) -> PyResult<Vec<u8>> {
-        let datfile: DatFile = self.extract();
-        let data = datfile
-            .serialize()
-            .map_err(|err| PyValueError::new_err(err.to_string()))?;
-        Ok(data)
-    }
-
-    #[pyo3(name="pack")]
-    fn py_pack(&self) -> PyResult<Vec<u8>> {
-        let datfile: DatFile = self.extract();
-        let data = datfile
-            .pack()
-            .map_err(|err| PyValueError::new_err(err.to_string()))?;
-        Ok(data)
-    }*/
-
-}
-
 }

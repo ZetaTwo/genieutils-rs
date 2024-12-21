@@ -215,11 +215,14 @@ mod python {
                 mirroring_mode: self.mirroring_mode,
                 editor_flag: self.editor_flag,
                 deltas: self.deltas.into_pyobject(py)?.downcast_into()?.unbind(),
-                angle_sounds: self.angle_sounds.into_pyobject(py)?.downcast_into()?.unbind(),
+                angle_sounds: self
+                    .angle_sounds
+                    .into_pyobject(py)?
+                    .downcast_into()?
+                    .unbind(),
             };
 
             Ok(Py::new(py, res)?.into_bound(py))
         }
     }
-
 }

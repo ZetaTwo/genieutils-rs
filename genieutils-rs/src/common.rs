@@ -73,9 +73,9 @@ pub struct DebugString {
 
 #[cfg(feature = "pyo3")]
 mod python {
-    use pyo3::prelude::*;
-    use pyo3::types::{PyList, PyString};
     use super::DebugString;
+    use pyo3::prelude::*;
+    use pyo3::types::PyString;
 
     impl<'py> IntoPyObject<'py> for DebugString {
         type Target = PyString;

@@ -47,15 +47,15 @@ mod python {
 
         fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
             let res = PyPlayerColour {
-                id: self.id, 
-                player_color_base: self.player_color_base, 
-                unit_outline_color: self.unit_outline_color, 
-                unit_selection_color_1: self.unit_selection_color_1, 
-                unit_selection_color_2: self.unit_selection_color_2, 
-                minimap_color: self.minimap_color, 
-                minimap_color_2: self.minimap_color_2, 
-                minimap_color_3: self.minimap_color_3, 
-                statistics_text: self.statistics_text, 
+                id: self.id,
+                player_color_base: self.player_color_base,
+                unit_outline_color: self.unit_outline_color,
+                unit_selection_color_1: self.unit_selection_color_1,
+                unit_selection_color_2: self.unit_selection_color_2,
+                minimap_color: self.minimap_color,
+                minimap_color_2: self.minimap_color_2,
+                minimap_color_3: self.minimap_color_3,
+                statistics_text: self.statistics_text,
             };
 
             Ok(Py::new(py, res)?.into_bound(py))
