@@ -14,9 +14,11 @@ print(datfile['version'])
 print(datfile['float_ptr_terrain_tables'])
 datfile['float_ptr_terrain_tables'].append(1)
 print(datfile['float_ptr_terrain_tables'])
-
-serialized = genieutils_rspy.DatFile.serialize(datfile)
-print(f'Round-trip works: {decompressed == serialized}')
+print(datfile['sounds'])
+print(type(datfile['sounds'][0]))
+print(dir(datfile['sounds'][0]))
+#serialized = genieutils_rspy.DatFile.serialize(datfile)
+#print(f'Round-trip works: {decompressed == serialized}')
 
 """
 

@@ -174,6 +174,55 @@ impl DatFile {
         Ok(inflated)
     }
 }
+
+
+#[cfg(feature = "pyo3")]
+mod python {
+    use super::DatFile;
+    use super::Version;
+    use pyo3::exceptions::PyValueError;
+    use pyo3::prelude::*;
+#[pyclass(name = "DatFile", module = "genieutils_rspy")]
+pub struct PyDatFile {
+    #[pyo3(get, set)]
+    pub version: Py<Version>,
+    //#[pyo3(get, set)]
+    //pub float_ptr_terrain_tables: Py<PyList>,
+    //#[pyo3(get, set)]
+    //pub terrain_pass_graphic_pointers: Py<PyList>,
+    //#[pyo3(get, set)]
+    //pub terrain_restrictions: Py<PyList>,
+    //#[pyo3(get, set)]
+    //pub player_colours: Py<PyList>,
+    //#[pyo3(get, set)]
+    //pub sounds: Py<PyList>,
+    //#[pyo3(get, set)]
+    //graphic_pointers: Py<PyList>,
+    //#[pyo3(get, set)]
+    //pub graphics: Vec<Option<Py<PyGraphic>>>,
+    //#[pyo3(get, set)]
+    //pub terrain_block: Py<PyTerrainBlock>,
+    //#[pyo3(get, set)]
+    //pub random_maps: Py<PyRandomMaps>,
+    //#[pyo3(get, set)]
+    //pub effects: Vec<Py<PyEffect>>,
+    //#[pyo3(get, set)]
+    //pub unit_headers: Vec<Py<PyUnitHeaders>>,
+    //#[pyo3(get, set)]
+    //pub civs: Vec<Py<PyCiv>>,
+    //#[pyo3(get, set)]
+    //pub techs: Vec<Py<PyTech>>,
+    pub time_slice: u32,
+    pub unit_kill_rate: u32,
+    pub unit_kill_total: u32,
+    pub unit_hit_point_rate: u32,
+    pub unit_hit_point_total: u32,
+    pub razing_kill_rate: u32,
+    pub razing_kill_total: u32,
+    //pub tech_tree: Py<PyTechTree>,
+}
+}
+
 /*
 #[cfg(feature = "pyo3")]
 mod python {
