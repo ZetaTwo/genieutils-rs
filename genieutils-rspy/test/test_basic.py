@@ -10,13 +10,18 @@ datfile = genieutils_rspy.DatFile.parse(decompressed)
 
 
 print(dir(datfile))
-print(datfile['version'])
-print(datfile['float_ptr_terrain_tables'])
-datfile['float_ptr_terrain_tables'].append(1)
-print(datfile['float_ptr_terrain_tables'])
-print(datfile['sounds'])
-print(type(datfile['sounds'][0]))
-print(dir(datfile['sounds'][0]))
+print(datfile.version)
+print(datfile.float_ptr_terrain_tables)
+datfile.float_ptr_terrain_tables.append(1)
+print(datfile.float_ptr_terrain_tables)
+print(datfile.sounds)
+print(type(datfile.sounds[0]))
+print(dir(datfile.sounds[0]))
+
+
+for player_colour in datfile.player_colours:
+    print(player_colour)
+
 #serialized = genieutils_rspy.DatFile.serialize(datfile)
 #print(f'Round-trip works: {decompressed == serialized}')
 

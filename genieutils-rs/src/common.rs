@@ -55,7 +55,7 @@ impl PartialOrd<UnitType> for u8 {
 #[brw(little)]
 #[br(assert(temp_size == 0x0A60, "DebugString temp_size invalid: {}", temp_size))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(feature = "pyo3", derive(IntoPyObject, FromPyObject))]
+#[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 pub struct DebugString {
     #[br(temp)]
     #[bw(calc = 0x0A60)]
@@ -69,6 +69,23 @@ pub struct DebugString {
     #[br(try_map = |x: Vec<u8>| String::from_utf8(x))]
     #[bw(map = |x: &String| x.as_bytes())]
     pub int_str: String,
+}
+
+#[cfg(feature = "pyo3")]
+mod python {
+    use pyo3::prelude::*;
+    use pyo3::types::{PyList, PyString};
+    use super::DebugString;
+
+    impl<'py> IntoPyObject<'py> for DebugString {
+        type Target = PyString;
+        type Output = Bound<'py, Self::Target>;
+        type Error = PyErr;
+
+        fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
+            Ok(PyString::intern(py, &self.int_str))
+        }
+    }
 }
 
 //#[cfg(test)]
