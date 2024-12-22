@@ -300,16 +300,6 @@ pub mod python {
             Ok(data)
         }
 
-        /*#[staticmethod]
-        #[pyo3(name = "serialize")]
-        fn serialize(data: &Bound<'_, PyDatFile>) -> PyResult<Vec<u8>> {
-            let datfile: DatFile = data.extract()?;
-            let data = datfile
-                .serialize()
-                .map_err(|err| PyValueError::new_err(err.to_string()))?;
-            Ok(data)
-        }*/
-
         #[pyo3(name = "serialize")]
         fn serialize(data: &Bound<'_, PyDatFile>) -> PyResult<Vec<u8>> {
             let datfile: DatFile = data.extract()?;
@@ -318,16 +308,6 @@ pub mod python {
                 .map_err(|err| PyValueError::new_err(err.to_string()))?;
             Ok(data)
         }
-
-        /*#[staticmethod]
-        #[pyo3(name = "pack")]
-        fn pack(data: &Bound<'_, PyDatFile>) -> PyResult<Vec<u8>> {
-            let datfile: DatFile = data.extract()?;
-            let data = datfile
-                .pack()
-                .map_err(|err| PyValueError::new_err(err.to_string()))?;
-            Ok(data)
-        }*/
 
         #[pyo3(name = "pack")]
         fn pack(data: &Bound<'_, PyDatFile>) -> PyResult<Vec<u8>> {

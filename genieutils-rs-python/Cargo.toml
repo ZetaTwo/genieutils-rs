@@ -1,11 +1,11 @@
 [package]
-name = "genieutils-rspy"
+name = "genieutils-rs-python"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
-name = "genieutils_rspy"
+name = "genieutils_rs"
 crate-type = ["cdylib"]
 
 [dependencies]

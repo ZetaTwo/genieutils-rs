@@ -100,7 +100,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "genieutils-rspy"
+name = "genieutils-rs-python"
 version = "0.1.0"
 dependencies = [
  "genieutils",

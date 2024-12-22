@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from genieutils_rspy import DatFile
+from genieutils_rs import DatFile
 import time
 
 with open('test/empires2_x2_p1.dat', 'rb') as fin:

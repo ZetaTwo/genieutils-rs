@@ -3,5 +3,5 @@ resolver = "3"
 
 members = [
     "genieutils-rs", "genieutils-rs-cli",
-    "genieutils-rspy",
+    "genieutils-rs-python",
 ]
