@@ -12,7 +12,7 @@ use pyo3::prelude::*;
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 pub struct EffectCommand {
-    pub r#type: u8,
+    pub effect_type: u8,
     pub a: i16,
     pub b: i16,
     pub c: i16,
@@ -43,7 +43,7 @@ mod python {
     #[pyclass(name = "EffectCommand", module = "genieutils_rspy")]
     #[pyo3(get_all, set_all)]
     pub struct PyEffectCommand {
-        pub r#type: u8,
+        pub effect_type: u8,
         pub a: i16,
         pub b: i16,
         pub c: i16,
@@ -57,7 +57,7 @@ mod python {
 
         fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
             let res = PyEffectCommand {
-                r#type: self.r#type,
+                effect_type: self.effect_type,
                 a: self.a,
                 b: self.b,
                 c: self.c,

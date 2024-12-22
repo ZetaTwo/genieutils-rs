@@ -55,7 +55,6 @@ impl PartialOrd<UnitType> for u8 {
 #[brw(little)]
 #[br(assert(temp_size == 0x0A60, "DebugString temp_size invalid: {}", temp_size))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 pub struct DebugString {
     #[br(temp)]
     #[bw(calc = 0x0A60)]
@@ -76,6 +75,15 @@ mod python {
     use super::DebugString;
     use pyo3::prelude::*;
     use pyo3::types::PyString;
+
+    impl<'py> FromPyObject<'py> for DebugString {
+        fn extract_bound(ob: &Bound<'py, PyAny>) -> PyResult<Self> {
+            let res = DebugString {
+                int_str: ob.extract()?,
+            };
+            Ok(res)
+        }
+    }
 
     impl<'py> IntoPyObject<'py> for DebugString {
         type Target = PyString;

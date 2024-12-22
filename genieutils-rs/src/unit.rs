@@ -15,7 +15,7 @@ use crate::versions::Version;
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 struct ResourceStorage {
-    r#type: i16,
+    storage_type: i16,
     amount: f32,
     flag: u8,
 }
@@ -87,7 +87,7 @@ struct Bird {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 struct AttackOrArmor {
-    r#class: i16,
+    attribute_class: i16,
     amount: i16,
 }
 
@@ -147,7 +147,7 @@ struct Projectile {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 struct ResourceCost {
-    r#type: i16,
+    cost_type: i16,
     amount: i16,
     flag: i16,
 }
@@ -231,11 +231,11 @@ struct Building {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 pub struct Unit {
-    r#type: u8,
+    unit_type: u8,
     id: i16,
     language_dll_name: i32,
     language_dll_creation: i32,
-    r#class: i16,
+    unit_class: i16,
     standing_graphic: (i16, i16),
     dying_graphic: i16,
     undead_graphic: i16,
@@ -283,7 +283,7 @@ pub struct Unit {
     occlusion_mode: u8,
     obstruction_type: u8,
     obstruction_class: u8,
-    r#trait: u8,
+    unit_trait: u8,
     civilization: u8,
     nothing: i16,
     selection_effect: u8,
@@ -314,34 +314,34 @@ pub struct Unit {
     copy_id: i16,
     base_id: i16,
 
-    #[br(if(r#type >= UnitType::Flag))]
-    #[bw(if(*r#type >= UnitType::Flag))]
+    #[br(if(unit_type >= UnitType::Flag))]
+    #[bw(if(*unit_type >= UnitType::Flag))]
     speed: Option<f32>,
 
-    #[br(if(r#type >= UnitType::DeadFish))]
-    #[bw(if(*r#type >= UnitType::DeadFish))]
+    #[br(if(unit_type >= UnitType::DeadFish))]
+    #[bw(if(*unit_type >= UnitType::DeadFish))]
     dead_fish: Option<DeadFish>,
 
-    #[br(if(r#type >= UnitType::Bird))]
-    #[bw(if(*r#type >= UnitType::Bird))]
+    #[br(if(unit_type >= UnitType::Bird))]
+    #[bw(if(*unit_type >= UnitType::Bird))]
     #[bw(args(version))]
     #[br(args(version))]
     bird: Option<Bird>,
 
-    #[br(if(r#type >= UnitType::Combatant))]
-    #[bw(if(*r#type >= UnitType::Combatant))]
+    #[br(if(unit_type >= UnitType::Combatant))]
+    #[bw(if(*unit_type >= UnitType::Combatant))]
     type_50: Option<Type50>,
 
-    #[br(if(r#type == UnitType::Projectile))]
-    #[bw(if(*r#type == UnitType::Projectile))]
+    #[br(if(unit_type == UnitType::Projectile))]
+    #[bw(if(*unit_type == UnitType::Projectile))]
     projectile: Option<Projectile>,
 
-    #[br(if(r#type >= UnitType::Creatable))]
-    #[bw(if(*r#type >= UnitType::Creatable))]
+    #[br(if(unit_type >= UnitType::Creatable))]
+    #[bw(if(*unit_type >= UnitType::Creatable))]
     creatable: Option<Creatable>,
 
-    #[br(if(r#type == UnitType::Building))]
-    #[bw(if(*r#type == UnitType::Building))]
+    #[br(if(unit_type == UnitType::Building))]
+    #[bw(if(*unit_type == UnitType::Building))]
     building: Option<Building>,
 }
 
@@ -369,7 +369,7 @@ mod python {
     #[pyclass(name = "ResourceStorage", module = "genieutils_rspy")]
     #[pyo3(get_all, set_all)]
     pub struct PyResourceStorage {
-        r#type: i16,
+        storage_type: i16,
         amount: f32,
         flag: u8,
     }
@@ -381,7 +381,7 @@ mod python {
 
         fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
             let res = PyResourceStorage {
-                r#type: self.r#type,
+                storage_type: self.storage_type,
                 amount: self.amount,
                 flag: self.flag,
             };
@@ -507,7 +507,7 @@ mod python {
     #[pyo3(get_all, set_all)]
 
     pub struct PyAttackOrArmor {
-        r#class: i16,
+        attribute_class: i16,
         amount: i16,
     }
 
@@ -518,7 +518,7 @@ mod python {
 
         fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
             let res = PyAttackOrArmor {
-                r#class: self.r#class,
+                attribute_class: self.attribute_class,
                 amount: self.amount,
             };
 
@@ -624,7 +624,7 @@ mod python {
     #[pyo3(get_all, set_all)]
 
     pub struct PyResourceCost {
-        r#type: i16,
+        cost_type: i16,
         amount: i16,
         flag: i16,
     }
@@ -636,7 +636,7 @@ mod python {
 
         fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
             let res = PyResourceCost {
-                r#type: self.r#type,
+                cost_type: self.cost_type,
                 amount: self.amount,
                 flag: self.flag,
             };
@@ -816,11 +816,11 @@ mod python {
     #[pyo3(get_all, set_all)]
 
     pub struct PyUnit {
-        r#type: u8,
+        unit_type: u8,
         id: i16,
         language_dll_name: i32,
         language_dll_creation: i32,
-        r#class: i16,
+        unit_class: i16,
         standing_graphic: Py<PyTuple>,
         dying_graphic: i16,
         undead_graphic: i16,
@@ -868,7 +868,7 @@ mod python {
         occlusion_mode: u8,
         obstruction_type: u8,
         obstruction_class: u8,
-        r#trait: u8,
+        unit_trait: u8,
         civilization: u8,
         nothing: i16,
         selection_effect: u8,
@@ -907,11 +907,11 @@ mod python {
 
         fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
             let res = PyUnit {
-                r#type: self.r#type,
+                unit_type: self.unit_type,
                 id: self.id,
                 language_dll_name: self.language_dll_name,
                 language_dll_creation: self.language_dll_creation,
-                r#class: self.r#class,
+                unit_class: self.unit_class,
                 standing_graphic: self.standing_graphic.into_pyobject(py)?.unbind(),
                 dying_graphic: self.dying_graphic,
                 undead_graphic: self.undead_graphic,
@@ -959,7 +959,7 @@ mod python {
                 occlusion_mode: self.occlusion_mode,
                 obstruction_type: self.obstruction_type,
                 obstruction_class: self.obstruction_class,
-                r#trait: self.r#trait,
+                unit_trait: self.unit_trait,
                 civilization: self.civilization,
                 nothing: self.nothing,
                 selection_effect: self.selection_effect,

@@ -173,8 +173,6 @@ impl DatFile {
 
 #[cfg(feature = "pyo3")]
 pub mod python {
-    use std::borrow::Borrow;
-
     use super::DatFile;
     use super::Version;
     use crate::randommaps::python::PyRandomMaps;
@@ -210,6 +208,12 @@ pub mod python {
         pub razing_kill_rate: u32,
         pub razing_kill_total: u32,
         pub tech_tree: Py<PyTechTree>,
+    }
+
+    #[pyclass(name = "PyDatFileWrapper", module = "genieutils_rspy")]
+    #[pyo3(get_all, set_all)]
+    pub struct PyDatFileWrapper {
+        datfile: Py<PyDatFile>,
     }
 
     impl<'py> IntoPyObject<'py> for DatFile {
@@ -270,7 +274,6 @@ pub mod python {
             Ok(Py::new(py, res)?.into_bound(py))
         }
     }
-
     #[pymethods]
     impl PyDatFile {
         #[staticmethod]
@@ -297,34 +300,42 @@ pub mod python {
             Ok(data)
         }
 
-        #[staticmethod]
+        /*#[staticmethod]
         #[pyo3(name = "serialize")]
-        fn serialize(data: &PyDatFile, py: Python<'_>) -> PyResult<Vec<u8>> {
-            
-        }
+        fn serialize(data: &Bound<'_, PyDatFile>) -> PyResult<Vec<u8>> {
+            let datfile: DatFile = data.extract()?;
+            let data = datfile
+                .serialize()
+                .map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(data)
+        }*/
 
-        /*#[pyo3(name="serialize")]
-        fn serialize(&self, py: Python<'_>) -> PyResult<Vec<u8>> {
-            
-
-
-            DatFile::extract_bound(self);
-            let y = Py::from(self);
-            //let datfile: DatFile = self.into_pyobject(py)?.extract()?;
-            let x = self.clone_ref();
+        #[pyo3(name = "serialize")]
+        fn serialize(data: &Bound<'_, PyDatFile>) -> PyResult<Vec<u8>> {
+            let datfile: DatFile = data.extract()?;
             let data = datfile
                 .serialize()
                 .map_err(|err| PyValueError::new_err(err.to_string()))?;
             Ok(data)
         }
 
-        #[pyo3(name="pack")]
-        fn pack(&self, py: Python<'_>) -> PyResult<Vec<u8>> {
-            let datfile: DatFile = self.clone().into_pyobject(py)?.extract()?;
+        /*#[staticmethod]
+        #[pyo3(name = "pack")]
+        fn pack(data: &Bound<'_, PyDatFile>) -> PyResult<Vec<u8>> {
+            let datfile: DatFile = data.extract()?;
             let data = datfile
                 .pack()
                 .map_err(|err| PyValueError::new_err(err.to_string()))?;
             Ok(data)
         }*/
+
+        #[pyo3(name = "pack")]
+        fn pack(data: &Bound<'_, PyDatFile>) -> PyResult<Vec<u8>> {
+            let datfile: DatFile = data.extract()?;
+            let data = datfile
+                .pack()
+                .map_err(|err| PyValueError::new_err(err.to_string()))?;
+            Ok(data)
+        }
     }
 }

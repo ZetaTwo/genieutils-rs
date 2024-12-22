@@ -12,7 +12,7 @@ use pyo3::prelude::*;
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 struct ResearchResourceCost {
-    r#type: i16,
+    cost_type: i16,
     amount: i16,
     flag: u8,
 }
@@ -35,7 +35,7 @@ pub struct Tech {
     language_dll_description: i32,
     research_time: i16,
     effect_id: i16,
-    r#type: i16,
+    tech_type: i16,
     icon_id: i16,
     button_id: u8,
     language_dll_help: i32,
@@ -57,7 +57,7 @@ mod python {
     #[pyclass(name = "ResearchResourceCost", module = "genieutils_rspy")]
     #[pyo3(get_all, set_all)]
     pub struct PyResearchResourceCost {
-        r#type: i16,
+        cost_type: i16,
         amount: i16,
         flag: u8,
     }
@@ -69,7 +69,7 @@ mod python {
 
         fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
             let res = PyResearchResourceCost {
-                r#type: self.r#type,
+                cost_type: self.cost_type,
                 amount: self.amount,
                 flag: self.flag,
             };
@@ -90,7 +90,7 @@ mod python {
         language_dll_description: i32,
         research_time: i16,
         effect_id: i16,
-        r#type: i16,
+        tech_type: i16,
         icon_id: i16,
         button_id: u8,
         language_dll_help: i32,
@@ -117,7 +117,7 @@ mod python {
                 language_dll_description: self.language_dll_description,
                 research_time: self.research_time,
                 effect_id: self.effect_id,
-                r#type: self.r#type,
+                tech_type: self.tech_type,
                 icon_id: self.icon_id,
                 button_id: self.button_id,
                 language_dll_help: self.language_dll_help,
