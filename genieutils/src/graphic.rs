@@ -11,29 +11,29 @@ use pyo3::prelude::*;
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct GraphicDelta {
-    graphic_id: i16,
-    padding_1: i16,
-    sprite_ptr: i32,
-    offset_x: i16,
-    offset_y: i16,
-    display_angle: i16,
-    padding_2: i16,
+pub struct GraphicDelta {
+    pub graphic_id: i16,
+    pub padding_1: i16,
+    pub sprite_ptr: i32,
+    pub offset_x: i16,
+    pub offset_y: i16,
+    pub display_angle: i16,
+    pub padding_2: i16,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct GraphicAngleSound {
-    frame_num: i16,
-    sound_id: i16,
-    wwise_sound_id: i32,
-    frame_num_2: i16,
-    sound_id_2: i16,
-    wwise_sound_id_2: i32,
-    frame_num_3: i16,
-    sound_id_3: i16,
-    wwise_sound_id_3: i32,
+pub struct GraphicAngleSound {
+    pub frame_num: i16,
+    pub sound_id: i16,
+    pub wwise_sound_id: i32,
+    pub frame_num_2: i16,
+    pub sound_id_2: i16,
+    pub wwise_sound_id_2: i32,
+    pub frame_num_3: i16,
+    pub sound_id_3: i16,
+    pub wwise_sound_id_3: i32,
 }
 
 #[binrw]
@@ -41,44 +41,44 @@ struct GraphicAngleSound {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 pub struct Graphic {
-    name: DebugString,
-    file_name: DebugString,
-    particle_effect_name: DebugString,
-    slp: i32,
-    is_loaded: u8,
-    old_color_flag: u8,
-    layer: u8,
-    player_color: i16,
-    transparent_selection: u8,
-    coordinates: (i16, i16, i16, i16),
+    pub name: DebugString,
+    pub file_name: DebugString,
+    pub particle_effect_name: DebugString,
+    pub slp: i32,
+    pub is_loaded: u8,
+    pub old_color_flag: u8,
+    pub layer: u8,
+    pub player_color: i16,
+    pub transparent_selection: u8,
+    pub coordinates: (i16, i16, i16, i16),
 
     #[br(temp)]
     #[bw(try_calc = deltas.len().try_into())]
     delta_count: i16,
 
-    sound_id: i16,
-    wwise_sound_id: i32,
-    angle_sounds_used: u8,
-    frame_count: i16,
+    pub sound_id: i16,
+    pub wwise_sound_id: i32,
+    pub angle_sounds_used: u8,
+    pub frame_count: i16,
 
     // TODO: Is this correct? Why is the count set even when unused?
     /*#[br(temp)]
     #[bw(try_calc = angle_sounds.len().try_into())]*/
-    angle_count: i16,
+    pub angle_count: i16,
 
-    speed_multiplier: f32,
-    frame_duration: f32,
-    replay_delay: f32,
-    sequence_type: u8,
-    id: i16,
-    mirroring_mode: u8,
-    editor_flag: u8,
+    pub speed_multiplier: f32,
+    pub frame_duration: f32,
+    pub replay_delay: f32,
+    pub sequence_type: u8,
+    pub id: i16,
+    pub mirroring_mode: u8,
+    pub editor_flag: u8,
 
     #[br(count = delta_count)]
-    deltas: Vec<GraphicDelta>,
+    pub deltas: Vec<GraphicDelta>,
 
     #[br(count = angle_count, if(angle_sounds_used != 0))]
-    angle_sounds: Vec<GraphicAngleSound>,
+    pub angle_sounds: Vec<GraphicAngleSound>,
 }
 
 #[cfg(feature = "pyo3")]

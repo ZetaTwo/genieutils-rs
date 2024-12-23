@@ -14,39 +14,39 @@ use crate::versions::Version;
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct ResourceStorage {
-    storage_type: i16,
-    amount: f32,
-    flag: u8,
+pub struct ResourceStorage {
+    pub storage_type: i16,
+    pub amount: f32,
+    pub flag: u8,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct DamageGraphic {
-    graphic_id: i16,
-    damage_percent: i16,
-    apply_mode: u8,
+pub struct DamageGraphic {
+    pub graphic_id: i16,
+    pub damage_percent: i16,
+    pub apply_mode: u8,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct DeadFish {
-    walking_graphic: i16,
-    running_graphic: i16,
-    rotation_speed: f32,
-    old_size_class: u8,
-    tracking_unit: i16,
-    tracking_unit_mode: u8,
-    tracking_unit_density: f32,
-    old_move_algorithm: u8,
-    turn_radius: f32,
-    turn_radius_speed: f32,
-    max_yaw_per_second_moving: f32,
-    stationary_yaw_revolution_time: f32,
-    max_yaw_per_second_stationary: f32,
-    min_collision_size_multiplier: f32,
+pub struct DeadFish {
+    pub walking_graphic: i16,
+    pub running_graphic: i16,
+    pub rotation_speed: f32,
+    pub old_size_class: u8,
+    pub tracking_unit: i16,
+    pub tracking_unit_mode: u8,
+    pub tracking_unit_density: f32,
+    pub old_move_algorithm: u8,
+    pub turn_radius: f32,
+    pub turn_radius_speed: f32,
+    pub max_yaw_per_second_moving: f32,
+    pub stationary_yaw_revolution_time: f32,
+    pub max_yaw_per_second_stationary: f32,
+    pub min_collision_size_multiplier: f32,
 }
 
 #[binrw]
@@ -54,10 +54,10 @@ struct DeadFish {
 #[bw(import(version: Version))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct Bird {
-    default_task_id: i16,
-    search_radius: f32,
-    work_rate: f32,
+pub struct Bird {
+    pub default_task_id: i16,
+    pub search_radius: f32,
+    pub work_rate: f32,
 
     #[br(temp)]
     #[br(if(version > Version::Ver77, 3))]
@@ -66,163 +66,163 @@ struct Bird {
     drop_sites_size: i16,
 
     #[br(count = drop_sites_size)]
-    drop_sites: Vec<i16>,
+    pub drop_sites: Vec<i16>,
 
-    task_swap_group: u8,
-    attack_sound: i16,
-    move_sound: i16,
-    wwise_attack_sound_id: i32,
-    wwise_move_sound_id: i32,
-    run_pattern: u8,
+    pub task_swap_group: u8,
+    pub attack_sound: i16,
+    pub move_sound: i16,
+    pub wwise_attack_sound_id: i32,
+    pub wwise_move_sound_id: i32,
+    pub run_pattern: u8,
 
     #[br(temp)]
     #[bw(try_calc = tasks.len().try_into())]
     tasks_size: i16,
 
     #[br(count = tasks_size)]
-    tasks: Vec<Task>,
+    pub tasks: Vec<Task>,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct AttackOrArmor {
-    attribute_class: i16,
-    amount: i16,
+pub struct AttackOrArmor {
+    pub attribute_class: i16,
+    pub amount: i16,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct Type50 {
-    base_armor: i16,
+pub struct Type50 {
+    pub base_armor: i16,
 
     #[br(temp)]
     #[bw(try_calc = attacks.len().try_into())]
     attack_count: i16,
 
     #[br(count = attack_count)]
-    attacks: Vec<AttackOrArmor>,
+    pub attacks: Vec<AttackOrArmor>,
 
     #[br(temp)]
     #[bw(try_calc = armours.len().try_into())]
     armour_count: i16,
 
     #[br(count = armour_count)]
-    armours: Vec<AttackOrArmor>,
+    pub armours: Vec<AttackOrArmor>,
 
-    defense_terrain_bonus: i16,
-    bonus_damage_resistance: f32,
-    max_range: f32,
-    blast_width: f32,
-    reload_time: f32,
-    projectile_unit_id: i16,
-    accuracy_percent: i16,
-    break_off_combat: u8,
-    frame_delay: i16,
-    graphic_displacement: (f32, f32, f32),
-    blast_attack_level: u8,
-    min_range: f32,
-    accuracy_dispersion: f32,
-    attack_graphic: i16,
-    displayed_melee_armour: i16,
-    displayed_attack: i16,
-    displayed_range: f32,
-    displayed_reload_time: f32,
-    blast_damage: f32,
+    pub defense_terrain_bonus: i16,
+    pub bonus_damage_resistance: f32,
+    pub max_range: f32,
+    pub blast_width: f32,
+    pub reload_time: f32,
+    pub projectile_unit_id: i16,
+    pub accuracy_percent: i16,
+    pub break_off_combat: u8,
+    pub frame_delay: i16,
+    pub graphic_displacement: (f32, f32, f32),
+    pub blast_attack_level: u8,
+    pub min_range: f32,
+    pub accuracy_dispersion: f32,
+    pub attack_graphic: i16,
+    pub displayed_melee_armour: i16,
+    pub displayed_attack: i16,
+    pub displayed_range: f32,
+    pub displayed_reload_time: f32,
+    pub blast_damage: f32,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct Projectile {
-    projectile_type: u8,
-    smart_mode: u8,
-    hit_mode: u8,
-    vanish_mode: u8,
-    area_effect_specials: u8,
-    projectile_arc: f32,
+pub struct Projectile {
+    pub projectile_type: u8,
+    pub smart_mode: u8,
+    pub hit_mode: u8,
+    pub vanish_mode: u8,
+    pub area_effect_specials: u8,
+    pub projectile_arc: f32,
 }
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct ResourceCost {
-    cost_type: i16,
-    amount: i16,
-    flag: i16,
-}
-
-#[binrw]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct Creatable {
-    resource_costs: (ResourceCost, ResourceCost, ResourceCost),
-    train_time: i16,
-    train_location_id: i16,
-    button_id: u8,
-    rear_attack_modifier: f32,
-    flank_attack_modifier: f32,
-    creatable_type: u8,
-    hero_mode: u8,
-    garrison_graphic: i32,
-    spawning_graphic: i16,
-    upgrade_graphic: i16,
-    hero_glow_graphic: i16,
-    max_charge: f32,
-    recharge_rate: f32,
-    charge_event: i16,
-    charge_type: i16,
-    min_conversion_time_mod: f32,
-    max_conversion_time_mod: f32,
-    conversion_chance_mod: f32,
-    total_projectiles: f32,
-    max_total_projectiles: u8,
-    projectile_spawning_area: (f32, f32, f32),
-    secondary_projectile_unit: i32,
-    special_graphic: i32,
-    special_ability: u8,
-    displayed_pierce_armor: i16,
+pub struct ResourceCost {
+    pub cost_type: i16,
+    pub amount: i16,
+    pub flag: i16,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct BuildingAnnex {
-    unit_id: i16,
-    misplacement_x: f32,
-    misplacement_y: f32,
+pub struct Creatable {
+    pub resource_costs: (ResourceCost, ResourceCost, ResourceCost),
+    pub train_time: i16,
+    pub train_location_id: i16,
+    pub button_id: u8,
+    pub rear_attack_modifier: f32,
+    pub flank_attack_modifier: f32,
+    pub creatable_type: u8,
+    pub hero_mode: u8,
+    pub garrison_graphic: i32,
+    pub spawning_graphic: i16,
+    pub upgrade_graphic: i16,
+    pub hero_glow_graphic: i16,
+    pub max_charge: f32,
+    pub recharge_rate: f32,
+    pub charge_event: i16,
+    pub charge_type: i16,
+    pub min_conversion_time_mod: f32,
+    pub max_conversion_time_mod: f32,
+    pub conversion_chance_mod: f32,
+    pub total_projectiles: f32,
+    pub max_total_projectiles: u8,
+    pub projectile_spawning_area: (f32, f32, f32),
+    pub secondary_projectile_unit: i32,
+    pub special_graphic: i32,
+    pub special_ability: u8,
+    pub displayed_pierce_armor: i16,
 }
 
 #[binrw]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
-struct Building {
-    construction_graphic_id: i16,
-    snow_graphic_id: i16,
-    destruction_graphic_id: i16,
-    destruction_rubble_graphic_id: i16,
-    researching_graphic: i16,
-    research_completed_graphic: i16,
-    adjacent_mode: u8,
-    graphics_angle: i16,
-    disappears_when_built: u8,
-    stack_unit_id: i16,
-    foundation_terrain_id: i16,
-    old_overlap_id: i16,
-    tech_id: i16,
-    can_burn: u8,
-    annexes: (BuildingAnnex, BuildingAnnex, BuildingAnnex, BuildingAnnex),
-    head_unit: i16,
-    transform_unit: i16,
-    transform_sound: i16,
-    construction_sound: i16,
-    wwise_transform_sound_id: i32,
-    wwise_construction_sound_id: i32,
-    garrison_type: u8,
-    garrison_heal_rate: f32,
-    garrison_repair_rate: f32,
-    pile_unit: i16,
-    looting_table: (u8, u8, u8, u8, u8, u8),
+pub struct BuildingAnnex {
+    pub unit_id: i16,
+    pub misplacement_x: f32,
+    pub misplacement_y: f32,
+}
+
+#[binrw]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "pyo3", derive(FromPyObject))]
+pub struct Building {
+    pub construction_graphic_id: i16,
+    pub snow_graphic_id: i16,
+    pub destruction_graphic_id: i16,
+    pub destruction_rubble_graphic_id: i16,
+    pub researching_graphic: i16,
+    pub research_completed_graphic: i16,
+    pub adjacent_mode: u8,
+    pub graphics_angle: i16,
+    pub disappears_when_built: u8,
+    pub stack_unit_id: i16,
+    pub foundation_terrain_id: i16,
+    pub old_overlap_id: i16,
+    pub tech_id: i16,
+    pub can_burn: u8,
+    pub annexes: (BuildingAnnex, BuildingAnnex, BuildingAnnex, BuildingAnnex),
+    pub head_unit: i16,
+    pub transform_unit: i16,
+    pub transform_sound: i16,
+    pub construction_sound: i16,
+    pub wwise_transform_sound_id: i32,
+    pub wwise_construction_sound_id: i32,
+    pub garrison_type: u8,
+    pub garrison_heal_rate: f32,
+    pub garrison_repair_rate: f32,
+    pub pile_unit: i16,
+    pub looting_table: (u8, u8, u8, u8, u8, u8),
 }
 
 #[binrw]
@@ -231,118 +231,118 @@ struct Building {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 pub struct Unit {
-    unit_type: u8,
-    id: i16,
-    language_dll_name: i32,
-    language_dll_creation: i32,
-    unit_class: i16,
-    standing_graphic: (i16, i16),
-    dying_graphic: i16,
-    undead_graphic: i16,
-    undead_mode: u8,
-    hit_points: i16,
-    line_of_sight: f32,
-    garrison_capacity: u8,
-    collision_size_x: f32,
-    collision_size_y: f32,
-    collision_size_z: f32,
-    train_sound: i16,
-    damage_sound: i16,
-    dead_unit_id: i16,
-    blood_unit_id: i16,
-    sort_number: u8,
-    can_be_built_on: u8,
-    icon_id: i16,
-    hide_in_editor: u8,
-    old_portrait_pict: i16,
-    enabled: u8,
-    disabled: u8,
-    placement_side_terrain: (i16, i16),
-    placement_terrain: (i16, i16),
-    clearance_size: (f32, f32),
-    hill_mode: u8,
-    fog_visibility: u8,
-    terrain_restriction: i16,
-    fly_mode: u8,
-    resource_capacity: i16,
-    resource_decay: f32,
-    blast_defense_level: u8,
-    combat_level: u8,
-    interation_mode: u8,
-    minimap_mode: u8,
-    interface_kind: u8,
-    multiple_attribute_mode: f32,
-    minimap_color: u8,
-    language_dll_help: i32,
-    language_dll_hotkey_text: i32,
-    hot_key: i32,
-    recyclable: u8,
-    enable_auto_gather: u8,
-    create_doppelganger_on_death: u8,
-    resource_gather_group: u8,
-    occlusion_mode: u8,
-    obstruction_type: u8,
-    obstruction_class: u8,
-    unit_trait: u8,
-    civilization: u8,
-    nothing: i16,
-    selection_effect: u8,
-    editor_selection_colour: u8,
-    outline_size_x: f32,
-    outline_size_y: f32,
-    outline_size_z: f32,
-    scenario_triggers_1: i32,
-    scenario_triggers_2: i32,
-    resource_storages: (ResourceStorage, ResourceStorage, ResourceStorage),
+    pub unit_type: u8,
+    pub id: i16,
+    pub language_dll_name: i32,
+    pub language_dll_creation: i32,
+    pub unit_class: i16,
+    pub standing_graphic: (i16, i16),
+    pub dying_graphic: i16,
+    pub undead_graphic: i16,
+    pub undead_mode: u8,
+    pub hit_points: i16,
+    pub line_of_sight: f32,
+    pub garrison_capacity: u8,
+    pub collision_size_x: f32,
+    pub collision_size_y: f32,
+    pub collision_size_z: f32,
+    pub train_sound: i16,
+    pub damage_sound: i16,
+    pub dead_unit_id: i16,
+    pub blood_unit_id: i16,
+    pub sort_number: u8,
+    pub can_be_built_on: u8,
+    pub icon_id: i16,
+    pub hide_in_editor: u8,
+    pub old_portrait_pict: i16,
+    pub enabled: u8,
+    pub disabled: u8,
+    pub placement_side_terrain: (i16, i16),
+    pub placement_terrain: (i16, i16),
+    pub clearance_size: (f32, f32),
+    pub hill_mode: u8,
+    pub fog_visibility: u8,
+    pub terrain_restriction: i16,
+    pub fly_mode: u8,
+    pub resource_capacity: i16,
+    pub resource_decay: f32,
+    pub blast_defense_level: u8,
+    pub combat_level: u8,
+    pub interation_mode: u8,
+    pub minimap_mode: u8,
+    pub interface_kind: u8,
+    pub multiple_attribute_mode: f32,
+    pub minimap_color: u8,
+    pub language_dll_help: i32,
+    pub language_dll_hotkey_text: i32,
+    pub hot_key: i32,
+    pub recyclable: u8,
+    pub enable_auto_gather: u8,
+    pub create_doppelganger_on_death: u8,
+    pub resource_gather_group: u8,
+    pub occlusion_mode: u8,
+    pub obstruction_type: u8,
+    pub obstruction_class: u8,
+    pub unit_trait: u8,
+    pub civilization: u8,
+    pub nothing: i16,
+    pub selection_effect: u8,
+    pub editor_selection_colour: u8,
+    pub outline_size_x: f32,
+    pub outline_size_y: f32,
+    pub outline_size_z: f32,
+    pub scenario_triggers_1: i32,
+    pub scenario_triggers_2: i32,
+    pub resource_storages: (ResourceStorage, ResourceStorage, ResourceStorage),
 
     #[br(temp)]
     #[bw(try_calc = damage_graphics.len().try_into())]
     damage_graphic_size: u8,
 
     #[br(count = damage_graphic_size)]
-    damage_graphics: Vec<DamageGraphic>,
+    pub damage_graphics: Vec<DamageGraphic>,
 
-    selection_sound: i16,
-    dying_sound: i16,
-    wwise_train_sound_id: i32,
-    wwise_damage_sound_id: i32,
-    wwise_selection_sound_id: i32,
-    wwise_dying_sound_id: i32,
-    old_attack_reaction: u8,
-    convert_terrain: u8,
-    name: DebugString,
-    copy_id: i16,
-    base_id: i16,
+    pub selection_sound: i16,
+    pub dying_sound: i16,
+    pub wwise_train_sound_id: i32,
+    pub wwise_damage_sound_id: i32,
+    pub wwise_selection_sound_id: i32,
+    pub wwise_dying_sound_id: i32,
+    pub old_attack_reaction: u8,
+    pub convert_terrain: u8,
+    pub name: DebugString,
+    pub copy_id: i16,
+    pub base_id: i16,
 
     #[br(if(unit_type >= UnitType::Flag))]
     #[bw(if(*unit_type >= UnitType::Flag))]
-    speed: Option<f32>,
+    pub speed: Option<f32>,
 
     #[br(if(unit_type >= UnitType::DeadFish))]
     #[bw(if(*unit_type >= UnitType::DeadFish))]
-    dead_fish: Option<DeadFish>,
+    pub dead_fish: Option<DeadFish>,
 
     #[br(if(unit_type >= UnitType::Bird))]
     #[bw(if(*unit_type >= UnitType::Bird))]
     #[bw(args(version))]
     #[br(args(version))]
-    bird: Option<Bird>,
+    pub bird: Option<Bird>,
 
     #[br(if(unit_type >= UnitType::Combatant))]
     #[bw(if(*unit_type >= UnitType::Combatant))]
-    type_50: Option<Type50>,
+    pub type_50: Option<Type50>,
 
     #[br(if(unit_type == UnitType::Projectile))]
     #[bw(if(*unit_type == UnitType::Projectile))]
-    projectile: Option<Projectile>,
+    pub projectile: Option<Projectile>,
 
     #[br(if(unit_type >= UnitType::Creatable))]
     #[bw(if(*unit_type >= UnitType::Creatable))]
-    creatable: Option<Creatable>,
+    pub creatable: Option<Creatable>,
 
     #[br(if(unit_type == UnitType::Building))]
     #[bw(if(*unit_type == UnitType::Building))]
-    building: Option<Building>,
+    pub building: Option<Building>,
 }
 
 #[cfg(feature = "pyo3")]

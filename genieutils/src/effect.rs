@@ -23,14 +23,14 @@ pub struct EffectCommand {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "pyo3", derive(FromPyObject))]
 pub struct Effect {
-    name: DebugString,
+    pub name: DebugString,
 
     #[br(temp)]
     #[bw(try_calc = effect_commands.len().try_into())]
     effect_command_count: i16,
 
     #[br(count = effect_command_count)]
-    effect_commands: Vec<EffectCommand>,
+    pub effect_commands: Vec<EffectCommand>,
 }
 
 #[cfg(feature = "pyo3")]

@@ -6,14 +6,15 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "pyo3")]
 use pyo3::prelude::*;
 
-pub const TILE_TYPE_COUNT: usize = 19;
-pub const TERRAIN_COUNT: usize = 200;
-pub const TERRAIN_UNITS_SIZE: usize = 30;
+pub(crate) const TILE_TYPE_COUNT: usize = 19;
+pub(crate) const TERRAIN_COUNT: usize = 200;
+pub(crate) const TERRAIN_UNITS_SIZE: usize = 30;
 
 #[derive(Clone, Copy, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 //#[cfg_attr( feature = "pyo3", derive(IntoPyObject, FromPyObject))]
 #[cfg_attr(feature = "pyo3", pyclass(module = "genieutils_rspy", eq, eq_int))]
+/// Genie engine unit type
 pub enum UnitType {
     EyeCandy = 10,
     Trees = 15,
@@ -55,6 +56,7 @@ impl PartialOrd<UnitType> for u8 {
 #[brw(little)]
 #[br(assert(temp_size == 0x0A60, "DebugString temp_size invalid: {}", temp_size))]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+/// A human-readable string for an object
 pub struct DebugString {
     #[br(temp)]
     #[bw(calc = 0x0A60)]
@@ -67,6 +69,7 @@ pub struct DebugString {
     #[br(count = size)]
     #[br(try_map = |x: Vec<u8>| String::from_utf8(x))]
     #[bw(map = |x: &String| x.as_bytes())]
+    /// The actual string value
     pub int_str: String,
 }
 
@@ -95,16 +98,3 @@ mod python {
         }
     }
 }
-
-//#[cfg(test)]
-/*impl std::fmt::Display for DebugString {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "DebugString: {}", self.int_str)
-    }
-}*/
-/*#[cfg(test)]
-impl std::fmt::Debug for DebugString {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "DebugString: {}", self.int_str)
-    }
-}*/

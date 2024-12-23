@@ -1,3 +1,5 @@
+// #![warn(missing_docs)]
+
 pub mod civ;
 pub mod common;
 pub mod datfile;
@@ -14,6 +16,25 @@ pub mod terrainrestrictions;
 pub mod unit;
 pub mod unitheaders;
 pub mod versions;
+
+pub use civ::Civ;
+pub use common::DebugString;
+pub use datfile::DatFile;
+pub use effect::{Effect, EffectCommand};
+pub use graphic::Graphic;
+pub use playercolour::PlayerColour;
+pub use randommaps::{MapElevation, MapInfo, MapLand, MapTerrain, MapUnit, RandomMaps};
+pub use sound::{Sound, SoundItem};
+pub use task::Task;
+pub use tech::Tech;
+pub use techtree::{
+    BuildingConnection, Common, ResearchConnection, TechTree, TechTreeAge, UnitConnection,
+};
+pub use terrainblock::TerrainBlock;
+pub use terrainrestrictions::{TerrainPassGraphic, TerrainRestriction};
+pub use unit::Unit;
+pub use unitheaders::UnitHeaders;
+pub use versions::Version;
 
 #[cfg(test)]
 mod tests {

@@ -92,7 +92,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "genieutils-rs-cli"
+name = "genieutils-cli"
 version = "0.1.0"
 dependencies = [
  "genieutils",
@@ -100,7 +100,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "genieutils-rs-python"
+name = "genieutils-py"
 version = "0.1.0"
 dependencies = [
  "genieutils",
