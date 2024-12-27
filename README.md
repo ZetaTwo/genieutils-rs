@@ -6,8 +6,8 @@ This library can be used to read and write empires2_x2_p1.dat files for Age of E
 
 ## Status
 
-The parser and serialzier itself is fully functional. The Python bindings are still work in progress.
-There's also very little documentation.
+The library is fully functional, including both the Rust library and the Python bindings.
+Unfortunately, the documentation is essentially non-existent and neither the Rust library nor the Python package have been published yet.
 
 ## Supported dat versions
 
